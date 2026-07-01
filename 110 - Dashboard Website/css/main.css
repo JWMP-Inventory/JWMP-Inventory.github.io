@@ -1,0 +1,87 @@
+:root {
+  color-scheme: dark;
+}
+
+
+body {
+  background-color:#414042;
+}
+
+
+html {
+    font-family: sans-serif;
+    line-height: 1.15;
+    -webkit-text-size-adjust: 100%;
+    -webkit-tap-highlight-color: transparent;
+}
+
+.inv-table {
+  max-height: 540px; /* Limits height to force scrolling */
+  overflow-y: auto;  /* Enables vertical scrollbar */
+}
+
+.inv-table th {
+  position: sticky;
+  top: 0;
+  background-color: #5f0048; /* Prevents underlying text from bleeding through */
+  z-index: 1; /* Keeps header layered on top of body rows */
+  box-shadow: inset 0 -1px 0 #000000;
+
+}
+
+
+
+/*  APPLIES TO ENTIRE TABLE BODY   */
+
+tbody tr{
+
+    color:#000000;
+    font-family: sans-serif;
+    font-weight: 700;
+}
+
+
+
+
+/*  MAIN ROW COLOR  */
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+    background: #ffffff;
+    border-radius: 10px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+}
+
+/*  ALTERNATING ROW COLOR   */
+
+tbody tr:nth-child(even) {
+    background-color: #dae9f8;
+}
+
+
+
+thead th {
+    padding: 15px;
+    text-align: left;
+    font-weight: 600;
+    letter-spacing: 0.5px;
+}
+
+tbody td {
+    padding: 14px 15px;
+}
+
+
+
+
+/* hover color */
+
+tbody tr:hover {
+    background-color: #000000;
+    transition: background-color 0.2s ease;
+}
+
+tbody tr:last-child td {
+    border-bottom: none;
+}
