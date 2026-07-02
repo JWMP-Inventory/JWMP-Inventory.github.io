@@ -24,40 +24,48 @@
     alt="Description"
     class="logo">
     <h1>Inventory Dashboard</h1>
+    
 
-   <div class="column-toggle">
+    </header>
+
+    <div class = "container">
+
+
+
+<div class="controls">
+
+
+<div class="column-toggle">
     <label>
-        <input type="radio" name="viewMode" value="basic" checked>
+        <input type="radio" name="viewMode" value="basic">
         Basic View
     </label>
 
     <label>
-        <input type="radio" name="viewMode" value="full">
+        <input type="radio" name="viewMode" value="full" checked>
         Full View
     </label>
 </div>
-  
 
-
-
-    </header>
  <div class="snapshot-info">
-    Last snapshot: 2026-07-01 10:28am
+    Last snapshot: 2026-07-02 10:34am
 
 </div>
 
+
+</div>
 
 
 
 <div class ="inv-table">
-    <table id = 'inventoryTable' data-page-length="15">
+    <table id = 'inventoryTable' data-page-length="10">
 
 
      
     <thead>
         <tr>
         <th>BAY</th>
-        <th>SHELF</th>
+        <th>LVL</th>
         <th>BIN</th>
         <th>Part Number</th>
         <th>WIDTH</th>
@@ -65,8 +73,8 @@
         <th>HEIGHT</th>
         <th>LOCATION</th>
         <th>ON HAND</th>
-        <th>DXF UPDATE</th>
-        <th>FORECAST USAGE</th>
+        <th>DXF</th>
+        <th>FORECAST</th>
         <th>BARCODE</th>
         <th>SEARCH TAGS</th>
         </tr>
@@ -2924,7 +2932,7 @@
 
 
 
-
+</container>
 
 
 </body>
