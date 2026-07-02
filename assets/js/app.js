@@ -36,6 +36,20 @@ document.addEventListener("DOMContentLoaded", () => {
 
         autoWidth: false,
 
+
+
+
+
+
+
+
+
+
+
+
+
+        
+
         columnDefs: [
 
             /* -----------------------------
@@ -51,6 +65,8 @@ document.addEventListener("DOMContentLoaded", () => {
             { targets: 6, width: "75px" },
 
             
+
+            
 {
         targets: [4,5,6],
         className: "dwh-highlight"
@@ -62,29 +78,53 @@ document.addEventListener("DOMContentLoaded", () => {
     },
 
 {
-        targets: [8,10],
+        targets: [8,10,11],
         className: "onhand-highlight"
     },
 
 
 
+{
+    targets: 10,
+    createdCell: function (cell, cellData, rowData) {
+
+        const onHand = parseFloat(rowData[8]) || 0;
+        const forecast = parseFloat(rowData[11]) || 0;
+
+        if (forecast === 0) return;
+
+        const shortage = forecast - onHand;
+
+        if (shortage <= 0) {
+            cell.classList.add("forecast-good");
+        }
+        else if (shortage < 20) {
+            cell.classList.add("forecast-low");
+        }
+        else {
+            cell.classList.add("forecast-critical");
+        }
+
+    }
+},
 
 
-             
+ 
+
 
             /* -----------------------------
                LOCATION COLUMN STYLE
             ----------------------------- */
             {
                 targets: [0,1,2,4,5,6,7,8,10],
-                className: "location-col"
+                className: "primary-data"
             },
 
             /* -----------------------------
                PERMANENTLY HIDDEN COLUMNS
             ----------------------------- */
             {
-                targets: [9,11,12],
+                targets: [9,12,13],
                 visible: false
             }
         ]
@@ -107,11 +147,14 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 
 
+
+
+
     /* =========================================
        VIEW SYSTEM (BASIC / FULL)
     ========================================= */
 
-    const advancedColumns = [4,5,6]; 
+    const advancedColumns = [4,5,6,7,11]; 
     // Only columns that actually change between views
 
     function applyView(isFull) {
@@ -129,6 +172,9 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 
 
+
+
+
     /* =========================================
        SET DEFAULT VIEW ON LOAD
     ========================================= */
@@ -139,7 +185,11 @@ document.addEventListener("DOMContentLoaded", () => {
     const isFull = checked ? checked.value === "full" : false;
 
     applyView(isFull);
+    updateForecastFormatting();
 });
+
+
+
 
 
     /* =========================================

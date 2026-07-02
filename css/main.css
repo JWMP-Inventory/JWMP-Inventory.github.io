@@ -147,6 +147,7 @@ thead th {
 ========================= */
 
 .inv-table {
+    max-height: 75vh;
     overflow-x: auto;
     -webkit-overflow-scrolling:touch;
 }
@@ -181,7 +182,19 @@ table.dataTable tbody tr:nth-child(even) td.onhand-highlight {
 }
 
 
+.forecast-good {
+    background-color: #6dffac !important;
+}
 
+.forecast-low {
+    background-color: #eaef4a !important;
+}
+
+.forecast-critical {
+    background-color: #ff4d4d !important;
+    color: white;
+    font-weight: bold;
+}
 
 
 /* Hover */
