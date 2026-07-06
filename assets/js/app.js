@@ -100,7 +100,12 @@ document.addEventListener("DOMContentLoaded", () => {
         if (shortage <= 0) {
             cell.classList.add("forecast-good");
         }
-        else if (shortage < 20) {
+
+        else if (onHand === 0){
+            cell.classList.add("forecast-critical");
+        }
+
+        else if ((shortage < 20)||(shortage>0 && onHand>25)) {
             cell.classList.add("forecast-low");
         }
         else {

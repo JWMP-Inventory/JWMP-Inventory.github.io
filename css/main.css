@@ -1,3 +1,29 @@
+:root {
+
+--bg-main: #414042;
+
+
+    --bg-card: #2f3032;
+
+    --accent: #5f0048;
+
+    --white: #ffffff;
+    --grey: #dddddd;
+
+    --green: #6dffac;
+    --yellow: #faf069;
+    --red: #ff4b4b;
+
+
+}
+
+
+
+
+
+
+
+
 html {
     font-family: sans-serif;
     line-height: 1.15;
@@ -46,6 +72,36 @@ body {
 .dt-input {
    min-height:38px;
 }
+
+
+.dataTables_wrapper .dt-layout-row {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.dt-length,
+.dt-search input {
+        width:100%;
+        max-width:none;
+        box-sizing:border-box;
+    }
+
+   
+
+
+    
+.snapshot-info{
+        display:block;
+        width:100%;
+        text-align:center;
+        margin-top:6px;
+        padding:0;
+    }
+
+
+
+
 
 
 
@@ -101,8 +157,8 @@ body {
 
 .snapshot-info {
     color: #6b7280;
-    justify-content:flex-end;
-    padding: 0px 30px
+    white-space:nowrap;
+    margin-left:30px;
 }
 
 
@@ -194,11 +250,11 @@ table.dataTable tbody tr:nth-child(even) td.onhand-highlight {
 }
 
 .forecast-low {
-    background-color: #eaef4a !important;
+    background-color: #faf069 !important;
 }
 
 .forecast-critical {
-    background-color: #ff4d4d !important;
+    background-color: #ff4b4b !important;
     color: white;
     font-weight: bold;
 }
@@ -403,4 +459,30 @@ tr.bay-separator td {
     border: 1px solid #666;
 
     box-shadow: 0 3px 10px rgba(0,0,0,.35);
+}
+
+
+/*  INVENTORY STATUS COLORS FOR HELP PAGE*/
+.legend-good {
+    background-color: #6dffac;
+    color: #000;
+    padding: 2px 8px;
+    border-radius: 4px;
+    font-weight: 600;
+}
+
+.legend-low {
+    background-color: #faf069;
+    color: #000;
+    padding: 2px 8px;
+    border-radius: 4px;
+    font-weight: 600;
+}
+
+.legend-critical {
+    background-color: #c54c4c;
+    color: #ffffff;
+    padding: 2px 8px;
+    border-radius: 4px;
+    font-weight: 600;
 }
