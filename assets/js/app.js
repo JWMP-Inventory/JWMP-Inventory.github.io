@@ -84,6 +84,8 @@ document.addEventListener("DOMContentLoaded", () => {
 
 
 
+
+    /* FUNCTION TARGETTING QTY SHORT COLUMN AND APPLYING FORMATTING BASED ON  VALUES */
 {
     targets: 10,
     createdCell: function (cell, cellData, rowData) {
@@ -107,6 +109,10 @@ document.addEventListener("DOMContentLoaded", () => {
 
     }
 },
+
+
+
+
 
 
  
@@ -142,8 +148,14 @@ document.addEventListener("DOMContentLoaded", () => {
     const lengthControl = document.querySelector(".dt-length");
 
     if (lengthControl) {
+
         const toggle = document.querySelector(".column-toggle");
         if (toggle) lengthControl.appendChild(toggle);
+
+const snapshot = document.querySelector(".snapshot-info");
+    if (snapshot) lengthControl.appendChild(snapshot);
+
+
     }
 
 

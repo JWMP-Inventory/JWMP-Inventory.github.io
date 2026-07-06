@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html lang="en">
+
+
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Inventory Dashboard</title>
+
+    <link rel="stylesheet" href="https://cdn.datatables.net/2.3.8/css/dataTables.dataTables.min.css">
+    <link rel="stylesheet" href="css/main.css">
+
+</head>
+
+
+
+
+<body>
+    <header class="header">
+
+        <div class="header-left">
+
+    <img src="assets/images/JW-Metal-Cabinets-Logo.png"
+
+    alt="Description"
+    class="logo">
+
+
+
+    <nav class="nav-bar">
+    <a href="index.html" class="nav-link">Inventory</a>
+    <a href="reporting.html" class="nav-link">Reporting</a>
+    <a href="help.html" class="nav-link active">Help</a>
+
+</nav>
+
+   
+
+</div>
+
+
+    </header>
+
+<div class="help-container">
+
+    <h1>Dashboard Guide</h1>
+
+
+    <div class="help-card">
+
+        <h2>🔍 Searching</h2>
+
+        <p>
+            The search box can be used to search for visible data, but also works with dimensions, common names, and a few custom tags.
+        </p>
+
+        <div class="search-example">
+For example, searching "24d floor" returns a list of all floors compatible with 24" deep base cabinets.
+
+            <img 
+            src="assets/images/search-ex-result.png"
+            alt="Example of searching for a part number"
+            class="help-image">
+            
+
+            Some tags to try: <br>
+            FHB <br>
+            Box <br>
+            Header / Floor / Back / Side<br>
+            18W / 24D / 34.5H / etc. <br>
+        </div>
+
+        <div class="help-tip">
+            <strong>Tip:</strong> Combine multiple tags to help narrow your search.
+        </div>
+
+    </div>
+
+
+
+    <div class="help-card">
+
+        <h2>👁 View Modes</h2>
+
+        <p><strong>Basic View</strong></p>
+
+        <ul>
+            <li>Shows Location, Part Name, On Hand, and Qty Short.</li>
+            <li>See the most critical areas at a glance.</li>
+        </ul>
+
+        <p><strong>Full View</strong></p>
+
+        <ul>
+            <li>Displays all inventory information.</li>
+            <li>Default view, useful when verifying part dimensions.</li>
+        </ul>
+
+    </div>
+
+
+
+    <div class="help-card">
+
+        <h2>🎨 Inventory Status Colors</h2>
+
+        <p>
+            Forecast values are compared against the current On Hand quantity.
+        </p>
+
+        <ul>
+            <li><span class="forecast-good">Green</span> — Inventory meets or exceeds forecast.</li>
+            <li><span class="forecast-low">Yellow</span> — Forecast exceeds inventory by 1–19 units.</li>
+            <li><span class="forecast-critical">Red</span> — Forecast exceeds inventory by 20 or more units.</li>
+        </ul>
+
+    </div>
+
+
+
+    <div class="help-card">
+
+        <h2>📦 Inventory Data</h2>
+
+        <p>
+            Inventory information and all live tracking/calculation is done through the master Excel workbook, this website simply hosts a copy.</p>
+            <p>The snapshot timestamp on the Inventory page indicates when the current data was exported.
+        </p>
+
+        <div class="help-tip">
+            <strong>Note:</strong> Data shown on the dashboard reflects the most recent snapshot and is not live.
+        </div>
+
+    </div>
+
+
+
+    <div class="help-card">
+
+        <h2>📊 Reporting</h2>
+
+        <p>
+            The Reporting page contains summary metrics and analysis generated from the current inventory snapshot.
+        </p>
+
+        <p>
+            Additional reports and charts will be added as new reporting features are developed.
+        </p>
+
+    </div>
+
+
+
+    <div class="help-card">
+
+        <h2>💡 Need Something?</h2>
+
+        <p>
+            email Don👍
+        </p>
+
+    </div>
+
+</div>
+
+
+
+
+<script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+<script src="https://cdn.datatables.net/2.3.8/js/dataTables.min.js"></script>
+<script src="assets/js/app.js"></script>
+
+
+
+
+</div>
+
+</html>
