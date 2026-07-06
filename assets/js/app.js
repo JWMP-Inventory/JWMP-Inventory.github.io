@@ -142,7 +142,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
 
     /* =========================================
-       MOVE VIEW TOGGLE INTO DATATABLE UI
+       MOVE RADIO BUTTONS AND LAST SNAPSHOT MARKER INTO DATATABLE UI
     ========================================= */
 
     const lengthControl = document.querySelector(".dt-length");
@@ -166,7 +166,7 @@ const snapshot = document.querySelector(".snapshot-info");
        VIEW SYSTEM (BASIC / FULL)
     ========================================= */
 
-    const advancedColumns = [4,5,6,7,11]; 
+    const advancedColumns = [0,1,2,4,5,6,7,11]; 
     // Only columns that actually change between views
 
     function applyView(isFull) {
