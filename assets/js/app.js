@@ -59,6 +59,10 @@ document.addEventListener("DOMContentLoaded", () => {
             { targets: 1, width: "50px" },
             { targets: 2, width: "50px" },
             
+            { targets: 3, width: "400px" },
+
+            
+            
 
             { targets: 4, width: "75px" },
             { targets: 5, width: "75px" },
