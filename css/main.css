@@ -237,24 +237,36 @@ table.dataTable tbody tr:nth-child(even) {
 }
 
 table.dataTable tbody tr:nth-child(even) td.dwh-highlight {
-    background-color: #fbe2d5;
+    background-color: #e5daf8;
 }
 
 table.dataTable tbody tr:nth-child(even) td.onhand-highlight {
-    background-color: #ffe5d5;
+    background-color: #dcf8da;
+}
+
+table.dataTable tbody tr:nth-child(even) td.forecast-highlight {
+    background-color: #f8dada;
 }
 
 
+
+.forecast-none {
+    background-color: #a2ffff !important;
+    color: black;
+}
+
 .forecast-good {
-    background-color: #6dffac !important;
+    background-color: #69ff8c !important;
+    color: black;
 }
 
 .forecast-low {
-    background-color: #faf069 !important;
+    background-color: #ffe89d !important;
+    color: black;
 }
 
 .forecast-critical {
-    background-color: #ff4b4b !important;
+    background-color: #ff4a4a !important;
     color: white;
     font-weight: bold;
 }
@@ -464,7 +476,7 @@ tr.bay-separator td {
 
 /*  INVENTORY STATUS COLORS FOR HELP PAGE*/
 .legend-good {
-    background-color: #6dffac;
+    background-color: #69ff8c;
     color: #000;
     padding: 2px 8px;
     border-radius: 4px;
@@ -472,7 +484,7 @@ tr.bay-separator td {
 }
 
 .legend-low {
-    background-color: #faf069;
+    background-color: #ffe89d;
     color: #000;
     padding: 2px 8px;
     border-radius: 4px;
@@ -480,8 +492,16 @@ tr.bay-separator td {
 }
 
 .legend-critical {
-    background-color: #c54c4c;
+    background-color: #ff4a4a;
     color: #ffffff;
+    padding: 2px 8px;
+    border-radius: 4px;
+    font-weight: 600;
+}
+
+.legend-none {
+    background-color: #a2ffff;
+    color: #000;
     padding: 2px 8px;
     border-radius: 4px;
     font-weight: 600;

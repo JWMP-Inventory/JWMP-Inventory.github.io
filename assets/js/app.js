@@ -73,12 +73,12 @@ document.addEventListener("DOMContentLoaded", () => {
     },
 
     {
-        targets: [0,1,2],
-        className: "blb-highlight"
+        targets: [11],
+        className: "forecast-highlight"
     },
 
 {
-        targets: [8,10,11],
+        targets: [8,9],
         className: "onhand-highlight"
     },
 
@@ -86,35 +86,47 @@ document.addEventListener("DOMContentLoaded", () => {
 
 
     /* FUNCTION TARGETTING QTY SHORT COLUMN AND APPLYING FORMATTING BASED ON  VALUES */
+
+    
 {
     targets: 10,
     createdCell: function (cell, cellData, rowData) {
 
         const onHand = parseFloat(rowData[8]) || 0;
+         const laserQueue = parseFloat(rowData[9]) || 0;
+        const qtyShrt = parseFloat(rowData[10]) || 0;
         const forecast = parseFloat(rowData[11]) || 0;
 
-        if (forecast === 0) return;
+
+        
 
         const shortage = forecast - onHand;
 
-        if (shortage <= 0) {
+
+if (forecast === 0) {
+            cell.classList.add("forecast-none");
+        }
+        
+if ((qtyShrt < 0)&&(forecast === 0)) {
+            cell.classList.add("forecast-none");
+        }
+if ((qtyShrt < onHand)&&(laserQueue === 0)) {
             cell.classList.add("forecast-good");
         }
 
-        else if (onHand === 0){
+if ((qtyShrt < onHand)&&(laserQueue != 0)) {
+            cell.classList.add("forecast-low");
+        }
+
+        if (qtyShrt > 0) {
             cell.classList.add("forecast-critical");
         }
 
-        else if ((shortage < 20)||(shortage>0 && onHand>25)) {
-            cell.classList.add("forecast-low");
-        }
-        else {
-            cell.classList.add("forecast-critical");
-        }
+    else return;
+
 
     }
 },
-
 
 
 
@@ -127,7 +139,7 @@ document.addEventListener("DOMContentLoaded", () => {
                LOCATION COLUMN STYLE
             ----------------------------- */
             {
-                targets: [0,1,2,4,5,6,7,8,10],
+                targets: [0,1,2,4,5,6,7,8,9,10],
                 className: "primary-data"
             },
 
@@ -135,7 +147,7 @@ document.addEventListener("DOMContentLoaded", () => {
                PERMANENTLY HIDDEN COLUMNS
             ----------------------------- */
             {
-                targets: [9,12,13],
+                targets: [12,13,14],
                 visible: false
             }
         ]
