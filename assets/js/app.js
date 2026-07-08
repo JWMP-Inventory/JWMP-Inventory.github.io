@@ -151,7 +151,7 @@ if ((qtyShrt < onHand)&&(laserQueue != 0)) {
                PERMANENTLY HIDDEN COLUMNS
             ----------------------------- */
             {
-                targets: [12,13,14],
+                targets: [7,12,13,14],
                 visible: false
             }
         ]
@@ -187,7 +187,7 @@ const snapshot = document.querySelector(".snapshot-info");
        VIEW SYSTEM (BASIC / FULL)
     ========================================= */
 
-    const advancedColumns = [0,1,2,4,5,6,7,11]; 
+    const advancedColumns = [0,1,2,4,5,6,11]; 
     // Only columns that actually change between views
 
     function applyView(isFull) {
