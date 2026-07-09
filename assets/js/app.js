@@ -27,6 +27,8 @@ document.addEventListener("DOMContentLoaded", () => {
         pageLength: 10,
         lengthMenu: [10, 20, 50, 100],
 
+         order: [[10, "desc"]],
+
         searching: true,
         ordering: true,
         info: true,
