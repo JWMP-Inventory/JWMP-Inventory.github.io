@@ -1,242 +1,623 @@
 console.log("app.js loaded");
 
+
 /* =========================================
-   GLOBAL FILTER (HIDES BLANK PART NUMBERS)
+   LOAD INVENTORY JSON
 ========================================= */
 
-DataTable.ext.search.push(function (settings, data) {
+document.addEventListener("DOMContentLoaded", async () => {
 
-    let column4 = data[3]; // Part Number column
+    try {
 
-    if (!column4 || column4.trim() === "") {
-        return false;
+        const response = await fetch("assets/data/inventory.json");
+
+        if (!response.ok) {
+            throw new Error(`HTTP error: ${response.status}`);
+        }
+
+        const inventoryData = await response.json();
+
+        console.log("Inventory JSON loaded:", inventoryData);
+
+        populateInventoryTable(inventoryData);
+
+    } catch (error) {
+
+        console.error("Error loading inventory JSON:", error);
+
+        const inventoryBody =
+            document.getElementById("inventoryBody");
+
+        if (inventoryBody) {
+
+            inventoryBody.innerHTML = `
+                <tr>
+                    <td colspan="15">
+                        Error loading inventory data.
+                    </td>
+                </tr>
+            `;
+
+        }
+
     }
 
-    return true;
 });
 
 
 /* =========================================
-   MAIN INITIALIZATION
+   POPULATE INVENTORY TABLE
 ========================================= */
 
-document.addEventListener("DOMContentLoaded", () => {
+function populateInventoryTable(inventoryData) {
 
-    const table = new DataTable("#inventoryTable", {
-
-        pageLength: 10,
-        lengthMenu: [10, 20, 50, 100],
-
-         order: [[10, "desc"]],
-
-        searching: true,
-        ordering: true,
-        info: true,
-        paging: true,
-        responsive: true,
-        select: true,
-
-        autoWidth: false,
+    const inventoryBody =
+        document.getElementById("inventoryBody");
 
 
+    if (!inventoryBody) {
 
+        console.error("inventoryBody not found.");
 
-
-
-
-
-
-
-
-
-
-        
-
-        columnDefs: [
-
-            /* -----------------------------
-               COLUMN WIDTHS (optional tuning)
-            ----------------------------- */
-            { targets: 0, width: "55px" },
-            { targets: 1, width: "50px" },
-            { targets: 2, width: "50px" },
-            
-            { targets: 3, width: "400px" },
-
-            
-            
-
-            { targets: 4, width: "75px" },
-            { targets: 5, width: "75px" },
-            { targets: 6, width: "75px" },
-
-            
-
-            
-{
-        targets: [4,5,6],
-        className: "dwh-highlight"
-    },
-
-    {
-        targets: [11],
-        className: "forecast-highlight"
-    },
-
-{
-        targets: [8,9],
-        className: "onhand-highlight"
-    },
-
-
-
-
-    /* FUNCTION TARGETTING QTY SHORT COLUMN AND APPLYING FORMATTING BASED ON  VALUES */
-
-    
-{
-    targets: 10,
-    createdCell: function (cell, cellData, rowData) {
-
-        const onHand = parseFloat(rowData[8]) || 0;
-         const laserQueue = parseFloat(rowData[9]) || 0;
-        const qtyShrt = parseFloat(rowData[10]) || 0;
-        const forecast = parseFloat(rowData[11]) || 0;
-
-
-        
-
-        const shortage = forecast - onHand;
-
-
-if (forecast === 0) {
-            cell.classList.add("forecast-none");
-        }
-        
-if ((qtyShrt < 0)&&(forecast === 0)) {
-            cell.classList.add("forecast-none");
-        }
-if ((qtyShrt < onHand)&&(laserQueue === 0)) {
-            cell.classList.add("forecast-good");
-        }
-
-if ((qtyShrt < onHand)&&(laserQueue != 0)) {
-            cell.classList.add("forecast-low");
-        }
-
-        if (qtyShrt > 0) {
-            cell.classList.add("forecast-critical");
-        }
-
-    else return;
-
+        return;
 
     }
-},
+
+
+    /* Clear existing rows */
+
+    inventoryBody.innerHTML = "";
+
+
+    /* =========================================
+       CREATE A ROW FOR EACH INVENTORY ITEM
+    ========================================= */
+
+    inventoryData.forEach(item => {
+
+
+        /* -----------------------------------------
+           HIDE BLANK PART NUMBERS
+        ----------------------------------------- */
+
+        if (
+            !item["Part Number"] ||
+            String(item["Part Number"]).trim() === ""
+        ) {
+
+            return;
+
+        }
+
+
+        /* =========================================
+           NUMERIC VALUES
+        ========================================= */
+
+        const onHand =
+            Number(item["ON HAND"]) || 0;
+
+        const dxfAdjust =
+            Number(item["DXF ADJUST"]) || 0;
+
+        const laserQueue =
+            Number(item["FOR LASER (+)"]) || 0;
+
+        const qtyShort =
+            Number(item["QTY SHORT"]) || 0;
+
+        const forecast =
+            Number(item["FORECAST USAGE"]) || 0;
+
+
+        /* =========================================
+           DETERMINE QTY SHORT COLOR
+        ========================================= */
+let qtyShortClass = "";
+
+
+/*
+   CRITICAL
+   Positive QTY SHORT
+*/
+
+if (qtyShort > 0) {
+
+    qtyShortClass = "forecast-critical";
+
+}
 
 
 
 
 
- 
+/*
+   GOOD
+*/
+
+else if (
+    qtyShort < onHand &&
+    laserQueue === 0
+) {
+
+    qtyShortClass = "forecast-good";
+
+}
 
 
-            /* -----------------------------
-               LOCATION COLUMN STYLE
-            ----------------------------- */
-            {
-                targets: [0,1,2,4,5,6,7,8,9,10],
-                className: "primary-data"
-            },
+/*
+   LOW
+*/
 
-            /* -----------------------------
-               PERMANENTLY HIDDEN COLUMNS
-            ----------------------------- */
-            {
-                targets: [7,12,13,14],
-                visible: false
-            }
-        ]
+else if (
+    qtyShort < onHand &&
+    laserQueue !== 0
+) {
+
+    qtyShortClass = "forecast-low";
+
+}
+/*
+   NO FORECAST
+*/
+
+else if (forecast === 0) {
+
+    qtyShortClass = "forecast-none";
+
+}
 
 
+        /* =========================================
+           CREATE TABLE ROW
 
+           COLUMN ORDER:
+
+           0  BAY
+           1  SHELF
+           2  BIN
+           3  PART NUMBER
+           4  WIDTH
+           5  DEPTH
+           6  HEIGHT
+           7  LOCATION
+           8  ON HAND
+           9  DXF ADJUST
+           10 LASER
+           11 QTY SHORT
+           12 FORECAST
+           13 BARCODE
+           14 SEARCH TAGS
+        ========================================= */
+
+        const row =
+            document.createElement("tr");
+
+
+        row.innerHTML = `
+
+            <td>${item["BAY"] ?? ""}</td>
+
+            <td>${item["SHELF"] ?? ""}</td>
+
+            <td>${item["BIN"] ?? ""}</td>
+
+            <td>${item["Part Number"] ?? ""}</td>
+
+            <td>${item["WIDTH"] ?? "-"}</td>
+
+            <td>${item["DEPTH"] ?? "-"}</td>
+
+            <td>${item["HEIGHT"] ?? "-"}</td>
+
+            <td>${item["LOCATION"] ?? ""}</td>
+
+            <td>${item["ON HAND"] ?? 0}</td>
+
+            <td>${item["DXF ADJUST"] ?? 0}</td>
+
+            <td>${item["FOR LASER (+)"] ?? 0}</td>
+
+            <td class="${qtyShortClass}">
+                ${item["QTY SHORT"] ?? 0}
+            </td>
+
+            <td>${item["FORECAST USAGE"] ?? 0}</td>
+
+            <td>${item["BARCODE"] ?? ""}</td>
+
+            <td>${item["SEARCH TAGS"] ?? ""}</td>
+
+        `;
+
+
+        /* =========================================
+           PART NUMBER TOOLTIP
+        ========================================= */
+
+        const partNumberCell = row.cells[3];
+
+        if (partNumberCell) {
+
+            partNumberCell.title =
+                item["Part Number"];
+
+        }
+
+
+        /* =========================================
+           SEARCH TAG TOOLTIP
+        ========================================= */
+
+        const searchTagsCell = row.cells[14];
+
+        if (
+            searchTagsCell &&
+            item["SEARCH TAGS"]
+        ) {
+
+            searchTagsCell.title =
+                item["SEARCH TAGS"];
+
+        }
+
+
+        /* =========================================
+           ADD ROW TO TABLE
+        ========================================= */
+
+        inventoryBody.appendChild(row);
 
     });
 
 
     /* =========================================
-       MOVE RADIO BUTTONS AND LAST SNAPSHOT MARKER INTO DATATABLE UI
+       INITIALIZE DATATABLE
     ========================================= */
 
-    const lengthControl = document.querySelector(".dt-length");
+    initializeDataTable();
+
+}
+
+
+/* =========================================
+   DATATABLE INITIALIZATION
+========================================= */
+
+function initializeDataTable() {
+
+    const table =
+        new DataTable("#inventoryTable", {
+
+
+        /* =========================================
+           PAGING
+        ========================================= */
+
+        pageLength: 10,
+
+        lengthMenu: [
+            10,
+            20,
+            50,
+            100
+        ],
+
+
+        /* =========================================
+           DEFAULT SORT
+           QTY SHORT = COLUMN 11
+        ========================================= */
+
+        order: [
+            [11, "desc"]
+        ],
+
+
+        /* =========================================
+           FEATURES
+        ========================================= */
+
+        searching: true,
+
+        ordering: true,
+
+        info: true,
+
+        paging: true,
+
+        responsive: true,
+
+        select: true,
+
+        autoWidth: false,
+
+
+        /* =========================================
+           COLUMN DEFINITIONS
+        ========================================= */
+
+        columnDefs: [
+
+
+            /* -----------------------------------------
+               COLUMN WIDTHS
+            ----------------------------------------- */
+
+            {
+                targets: 0,
+                width: "55px"
+            },
+
+            {
+                targets: 1,
+                width: "50px"
+            },
+
+            {
+                targets: 2,
+                width: "50px"
+            },
+
+            {
+                targets: 3,
+                width: "400px"
+            },
+
+            {
+                targets: 4,
+                width: "75px"
+            },
+
+            {
+                targets: 5,
+                width: "75px"
+            },
+
+            {
+                targets: 6,
+                width: "75px"
+            },
+
+
+            /* -----------------------------------------
+               WIDTH / DEPTH / HEIGHT
+            ----------------------------------------- */
+
+            {
+                targets: [
+                    4,
+                    5,
+                    6
+                ],
+
+                className: "dwh-highlight"
+
+            },
+
+
+            /* -----------------------------------------
+               FORECAST COLUMN
+               COLUMN 12
+            ----------------------------------------- */
+
+            {
+                targets: 12,
+
+                className: "forecast-highlight"
+
+            },
+
+
+            /* -----------------------------------------
+               ON HAND / DXF / LASER
+               COLUMNS 8, 9, 10
+            ----------------------------------------- */
+
+            {
+                targets: [
+                    8,
+                    9,
+                    10
+                ],
+
+                className: "onhand-highlight"
+
+            },
+
+
+            /* -----------------------------------------
+               PRIMARY DATA
+            ----------------------------------------- */
+
+            {
+                targets: [
+                    0,
+                    1,
+                    2,
+                    4,
+                    5,
+                    6,
+                    7,
+                    8,
+                    9,
+                    10,
+                    11
+                ],
+
+                className: "primary-data"
+
+            },
+
+
+            /* -----------------------------------------
+               HIDDEN COLUMNS
+
+               LOCATION
+               BARCODE
+               SEARCH TAGS
+            ----------------------------------------- */
+
+            {
+                targets: [
+                  7,   // LOCATION
+        9,   // DXF ADJUST
+        13,  // BARCODE
+        14   // SEARCH TAGS
+                ],
+
+                visible: false
+
+            }
+
+        ]
+
+    });
+
+
+    /* =========================================
+       MOVE RADIO BUTTONS AND SNAPSHOT
+       INTO DATATABLE UI
+    ========================================= */
+
+    const lengthControl =
+        document.querySelector(".dt-length");
+
 
     if (lengthControl) {
 
-        const toggle = document.querySelector(".column-toggle");
-        if (toggle) lengthControl.appendChild(toggle);
 
-const snapshot = document.querySelector(".snapshot-info");
-    if (snapshot) lengthControl.appendChild(snapshot);
+        const toggle =
+            document.querySelector(".column-toggle");
 
+
+        if (toggle) {
+
+            lengthControl.appendChild(toggle);
+
+        }
+
+
+        const snapshot =
+            document.querySelector(".snapshot-info");
+
+
+        if (snapshot) {
+
+            lengthControl.appendChild(snapshot);
+
+        }
 
     }
 
 
-
-
-
     /* =========================================
-       VIEW SYSTEM (BASIC / FULL)
+       VIEW SYSTEM
     ========================================= */
 
-    const advancedColumns = [0,1,2,4,5,6,11]; 
-    // Only columns that actually change between views
+    const advancedColumns = [
+
+        0,   // BAY
+        1,   // SHELF
+        2,   // BIN
+        4,   // WIDTH
+        5,   // DEPTH
+        6,   // HEIGHT
+        12   // FORECAST
+
+    ];
+
 
     function applyView(isFull) {
 
 
-
         advancedColumns.forEach(index => {
-            table.column(index).visible(isFull);
+
+            table
+                .column(index)
+                .visible(isFull);
+
         });
 
-        document.body.classList.toggle("full-view", isFull);
-        document.body.classList.toggle("basic-view", !isFull);
 
-        table.columns.adjust().draw(false);
+        document.body.classList.toggle(
+            "full-view",
+            isFull
+        );
+
+
+        document.body.classList.toggle(
+            "basic-view",
+            !isFull
+        );
+
+
+        table.columns.adjust();
+
+
+        /* -----------------------------------------
+           KEEP QTY SHORT SORTING
+        ----------------------------------------- */
+
+        table
+            .order([
+                [11, "desc"]
+            ])
+            .draw(false);
+
     }
 
 
-
-
-
     /* =========================================
-       SET DEFAULT VIEW ON LOAD
+       DEFAULT VIEW ON LOAD
     ========================================= */
 
-  table.on('init', function () {
-
-    const checked = document.querySelector('input[name="viewMode"]:checked');
-    const isFull = checked ? checked.value === "full" : false;
-
-    applyView(isFull);
-    updateForecastFormatting();
-});
+    table.on("init", function () {
 
 
+        const checked =
+            document.querySelector(
+                'input[name="viewMode"]:checked'
+            );
 
+
+        const isFull =
+            checked
+                ? checked.value === "full"
+                : false;
+
+
+        applyView(isFull);
+
+    });
 
 
     /* =========================================
        RADIO BUTTON EVENTS
     ========================================= */
 
-    document.querySelectorAll('input[name="viewMode"]').forEach(radio => {
+    document
+        .querySelectorAll(
+            'input[name="viewMode"]'
+        )
+        .forEach(radio => {
 
-        radio.addEventListener("change", function () {
-            applyView(this.value === "full");
+
+            radio.addEventListener(
+                "change",
+                function () {
+
+
+                    applyView(
+                        this.value === "full"
+                    );
+
+
+                }
+
+            );
+
+
         });
 
-    });
-
-});
+}
