@@ -9,7 +9,10 @@ document.addEventListener("DOMContentLoaded", async () => {
 
     try {
 
-   const response = await fetch("assets/data/inventory.json");
+const response = await fetch(
+    "assets/data/inventory.json?t=" + Date.now()
+);
+
 const jsonData = await response.json();
 
 const inventoryData = jsonData.inventory;
