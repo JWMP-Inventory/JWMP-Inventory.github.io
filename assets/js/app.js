@@ -19,6 +19,54 @@ const inventoryData = jsonData.inventory;
 
 console.log("Inventory last updated:", jsonData.lastUpdated);
 
+updateSnapshotTimestamp(jsonData.lastUpdated);
+
+
+/* =========================================
+   UPDATE SNAPSHOT TIMESTAMP
+========================================= */
+
+function updateSnapshotTimestamp(timestamp) {
+
+    const snapshot =
+        document.querySelector(".snapshot-info");
+
+    if (!snapshot) {
+
+        console.error(
+            "snapshot-info element not found."
+        );
+
+        return;
+
+    }
+
+    const date = new Date(timestamp);
+
+    if (isNaN(date.getTime())) {
+
+        snapshot.textContent =
+            "Last snapshot: Unknown";
+
+        return;
+
+    }
+
+    snapshot.textContent =
+        "Last snapshot: " +
+        date.toLocaleString([], {
+            year: "numeric",
+            month: "2-digit",
+            day: "2-digit",
+            hour: "numeric",
+            minute: "2-digit"
+        });
+
+}
+
+
+
+
 populateInventoryTable(inventoryData);
 
     } catch (error) {
