@@ -74,10 +74,13 @@
 
     </div>
 
+<!-- =========================
+     TOP PARTS
+========================= -->
 
-    <!-- =========================
-         TOP CRITICAL PARTS
-    ========================= -->
+<div class="reporting-chart-row">
+
+    <!-- TOP CRITICAL PARTS -->
 
     <div class="reporting-card">
 
@@ -92,6 +95,68 @@
         </div>
 
     </div>
+
+
+    <!-- TOP LOW PARTS -->
+
+    <div class="reporting-card">
+
+        <h2>Top Low Parts</h2>
+
+        <p>
+            Parts with the lowest current quantity.
+        </p>
+
+        <div class="chart-container top-parts-chart">
+            <canvas id="topLowInventoryChart"></canvas>
+        </div>
+
+    </div>
+
+</div>
+
+<!-- =========================
+     OVERSTOCK / LASER
+========================= -->
+
+<div class="reporting-chart-row">
+
+    <!-- TOP OVERSTOCKED PARTS -->
+
+    <div class="reporting-card">
+
+        <h2>Top Overstocked Parts</h2>
+
+        <p>
+            Parts with the largest amount of excess inventory.
+        </p>
+
+        <div class="chart-container top-parts-chart-2">
+            <canvas id="topOverstockChart"></canvas>
+        </div>
+
+    </div>
+
+
+    <!-- PARTS CURRENTLY ON LASER -->
+
+    <div class="reporting-card">
+
+        <h2>Parts Currently on Laser</h2>
+
+        <p>
+            Parts currently queued for laser production.
+        </p>
+
+        <div class="chart-container top-parts-chart-2">
+            <canvas id="laserPartsChart"></canvas>
+        </div>
+
+    </div>
+
+</div>
+
+
 
 </div>
 

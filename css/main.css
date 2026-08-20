@@ -552,10 +552,44 @@ tr.bay-separator td {
 
 .chart-container {
     position: relative;
-    height: 280px;
+    height: 250px;
     margin-top: 20px;
 }
 
 .top-parts-chart {
-    height: 450px;
+    height: 180px;
+}
+
+.top-parts-chart-2 {
+    height: 260px;
+}
+
+
+
+/* =========================================
+   REPORTING CHART ROW
+========================================= */
+
+.reporting-chart-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 20px;
+}
+
+
+/* Keep cards from overflowing */
+
+.reporting-chart-row .reporting-card {
+    min-width: 0;
+}
+
+
+/* Stack charts on mobile */
+
+@media (max-width: 768px) {
+
+    .reporting-chart-row {
+        grid-template-columns: 1fr;
+    }
+
 }
