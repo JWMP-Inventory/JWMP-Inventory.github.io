@@ -22,8 +22,11 @@ document.addEventListener("DOMContentLoaded", async () => {
         }
 
 
-        const inventoryData =
-            await response.json();
+        const jsonData =
+    await response.json();
+
+const inventoryData =
+    jsonData.inventory;
 
 
         console.log(

@@ -9,17 +9,14 @@ document.addEventListener("DOMContentLoaded", async () => {
 
     try {
 
-        const response = await fetch("assets/data/inventory.json");
+   const response = await fetch("assets/data/inventory.json");
+const jsonData = await response.json();
 
-        if (!response.ok) {
-            throw new Error(`HTTP error: ${response.status}`);
-        }
+const inventoryData = jsonData.inventory;
 
-        const inventoryData = await response.json();
+console.log("Inventory last updated:", jsonData.lastUpdated);
 
-        console.log("Inventory JSON loaded:", inventoryData);
-
-        populateInventoryTable(inventoryData);
+populateInventoryTable(inventoryData);
 
     } catch (error) {
 
