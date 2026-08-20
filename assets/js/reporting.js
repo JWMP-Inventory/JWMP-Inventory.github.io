@@ -732,6 +732,16 @@ function createTopOverstockChart(inventoryData) {
 
     const overstockParts = [];
 
+    /* Parts to exclude from overstock report */
+
+    const excludedParts = [
+        "HECH_24",
+        "24_3.5FLCH_LEFT",
+        "24_3.5FLCH_RIGHT",
+        "MAG_PLATE_DOUBLE_2",
+        "MAG_PLATE_SINGLE"
+    ];
+
 
     inventoryData.forEach(item => {
 
@@ -741,6 +751,19 @@ function createTopOverstockChart(inventoryData) {
             !item["Part Number"] ||
             String(item["Part Number"]).trim() === ""
         ) {
+
+            return;
+
+        }
+
+
+        const partNumber =
+            String(item["Part Number"]).trim();
+
+
+        /* Ignore excluded parts */
+
+        if (excludedParts.includes(partNumber)) {
 
             return;
 
@@ -767,7 +790,7 @@ function createTopOverstockChart(inventoryData) {
         overstockParts.push({
 
             partNumber:
-                item["Part Number"],
+                partNumber,
 
             onHand:
                 onHand
