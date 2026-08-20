@@ -1,88 +1,102 @@
 <!DOCTYPE html>
 <html lang="en">
 
-
-
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Inventory Dashboard</title>
 
-    <link rel="stylesheet" href="https://cdn.datatables.net/2.3.8/css/dataTables.dataTables.min.css">
+    <meta charset="UTF-8">
+
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0">
+
+    <title>Reporting</title>
+
     <link rel="stylesheet" href="css/main.css">
+
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
 </head>
 
-
-
-
 <body>
-    <header class="header">
 
-        <div class="header-left">
+<header class="header">
 
-    <img src="assets/images/JW-Metal-Cabinets-Logo.png"
+    <div class="header-left">
 
-    alt="Description"
-    class="logo">
+        <img src="assets/images/JW-Metal-Cabinets-Logo.png"
+             alt="Description"
+             class="logo">
 
+        <nav class="nav-bar">
 
+            <a href="index.html" class="nav-link">
+                Inventory
+            </a>
 
-    <nav class="nav-bar">
-    <a href="index.html" class="nav-link">Inventory</a>
-    <a href="reporting.html" class="nav-link active">Reporting</a>
-    <a href="help.html" class="nav-link">Help</a>
+            <a href="reporting.html" class="nav-link active">
+                Reporting
+            </a>
 
-</nav>
+            <a href="help.html" class="nav-link">
+                Help
+            </a>
 
-   
+        </nav>
 
-</div>
+    </div>
 
-    </header>
-
-    <div class = "container">
-
-
-
-
-
+</header>
 
 
-<div class="help-container">
+<div class="reporting-container">
 
-    <h1>Reporting</h1>
+    <h1>Inventory Reporting</h1>
 
-    <div id="inventory-health" class="help-card">
+    <p class="reporting-intro">
+        Current inventory health and parts requiring attention.
+    </p>
+
+
+    <!-- =========================
+         INVENTORY HEALTH
+    ========================= -->
+
+    <div class="reporting-card">
+
         <h2>Inventory Health</h2>
 
-        <p>🚧   Work In Progress    🚧</p>
+        <p>
+            Number of parts currently classified as good, low, or critical.
+        </p>
+
+        <div class="chart-container">
+            <canvas id="inventoryHealthChart"></canvas>
+        </div>
+
     </div>
 
-    <div id="qty-distribution" class="help-card">
-        <h2>Quantity Short Distribution</h2>
 
-        <p>🚧   Work in Progress    🚧</p>
+    <!-- =========================
+         TOP CRITICAL PARTS
+    ========================= -->
+
+    <div class="reporting-card">
+
+        <h2>Top Critical Parts</h2>
+
+        <p>
+            Parts with the largest current quantity shortages.
+        </p>
+
+        <div class="chart-container top-parts-chart">
+            <canvas id="topCriticalChart"></canvas>
+        </div>
+
     </div>
 
 </div>
 
 
-
-
-
-
-
-
-
-<script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
-<script src="https://cdn.datatables.net/2.3.8/js/dataTables.min.js"></script>
 <script src="assets/js/reporting.js"></script>
 
-
-
-
-</div>
-
-
+</body>
 </html>

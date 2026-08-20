@@ -506,3 +506,56 @@ tr.bay-separator td {
     border-radius: 4px;
     font-weight: 600;
 }
+
+
+
+/* =========================
+   REPORTING PAGE
+========================= */
+
+.reporting-container {
+    max-width: 1200px;
+    margin: 30px auto;
+    padding: 0 20px;
+    color: white;
+}
+
+.reporting-container h1 {
+    margin-top: 0;
+    margin-bottom: 10px;
+}
+
+.reporting-intro {
+    color: #cfcfcf;
+    margin-bottom: 30px;
+    line-height: 1.6;
+}
+
+.reporting-card {
+    background-color: #2f3032;
+    border-radius: 8px;
+    padding: 22px;
+    margin-bottom: 25px;
+    box-shadow: 0 2px 6px rgba(0,0,0,.25);
+}
+
+.reporting-card h2 {
+    margin-top: 0;
+    margin-bottom: 8px;
+    color: white;
+}
+
+.reporting-card p {
+    color: #cfcfcf;
+    margin-top: 0;
+}
+
+.chart-container {
+    position: relative;
+    height: 280px;
+    margin-top: 20px;
+}
+
+.top-parts-chart {
+    height: 450px;
+}
