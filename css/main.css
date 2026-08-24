@@ -593,3 +593,57 @@ tr.bay-separator td {
     }
 
 }
+
+
+
+/* =========================================
+   REPORTING FILTER
+========================================= */
+
+.reporting-filter-container {
+    margin-bottom: 20px;
+}
+
+
+.reporting-filter-container label {
+    display: block;
+
+    margin-bottom: 6px;
+
+    font-size: 14px;
+
+    font-weight: 500;
+
+    color: #ffffff;
+}
+
+
+.reporting-filter {
+    width: 100%;
+
+    box-sizing: border-box;
+
+    padding: 9px 12px;
+
+    border: 1px solid #666;
+
+    border-radius: 6px;
+
+    background-color: #2f2f30;
+
+    color: white;
+
+    font-size: 14px;
+}
+
+
+.reporting-filter::placeholder {
+    color: #aaa;
+}
+
+
+.reporting-filter:focus {
+    outline: none;
+
+    border-color: #5f0048;
+}

@@ -2,6 +2,24 @@ console.log("reporting.js loaded");
 
 
 /* =========================================
+   GLOBAL VARIABLES
+========================================= */
+
+let inventoryData = [];
+
+let currentPartTypeFilter = "";
+
+
+/* Keep references to the charts */
+
+let inventoryHealthChart = null;
+let topCriticalChart = null;
+let topLowInventoryChart = null;
+let topOverstockChart = null;
+let laserPartsChart = null;
+
+
+/* =========================================
    LOAD INVENTORY JSON
 ========================================= */
 
@@ -9,9 +27,10 @@ document.addEventListener("DOMContentLoaded", async () => {
 
     try {
 
-        const response = await fetch(
-    "assets/data/inventory.json?t=" + Date.now()
-);
+        const response =
+            await fetch(
+                "assets/data/inventory.json?t=" + Date.now()
+            );
 
 
         if (!response.ok) {
@@ -24,10 +43,11 @@ document.addEventListener("DOMContentLoaded", async () => {
 
 
         const jsonData =
-    await response.json();
+            await response.json();
 
-const inventoryData =
-    jsonData.inventory;
+
+        inventoryData =
+            jsonData.inventory;
 
 
         console.log(
@@ -36,15 +56,22 @@ const inventoryData =
         );
 
 
-createInventoryHealthChart(inventoryData);
+        /* Create charts */
 
-createTopCriticalChart(inventoryData);
+        createInventoryHealthChart();
 
-createTopLowInventoryChart(inventoryData);
+        createTopCriticalChart();
 
-createTopOverstockChart(inventoryData);
+        createTopLowInventoryChart();
 
-createLaserPartsChart(inventoryData);
+        createTopOverstockChart();
+
+        createLaserPartsChart();
+
+
+        /* Set up shared filter */
+
+        setupPartTypeFilter();
 
 
     } catch (error) {
@@ -60,6 +87,158 @@ createLaserPartsChart(inventoryData);
 
 
 /* =========================================
+   PART TYPE FILTER
+========================================= */
+
+function setupPartTypeFilter() {
+
+    const filterInput =
+        document.getElementById(
+            "partTypeFilter"
+        );
+
+
+    if (!filterInput) {
+
+        console.warn(
+            "Part Type filter not found."
+        );
+
+        return;
+
+    }
+
+
+    filterInput.addEventListener(
+        "input",
+        () => {
+
+            currentPartTypeFilter =
+                filterInput.value
+                    .trim()
+                    .toLowerCase();
+
+
+            refreshAllCharts();
+
+        }
+    );
+
+}
+
+
+/* =========================================
+   CHECK PART TYPE FILTER
+========================================= */
+
+function matchesPartType(item) {
+
+    /* No filter */
+    if (!currentPartTypeFilter) {
+        return true;
+    }
+
+    const filter =
+        currentPartTypeFilter
+            .toLowerCase()
+            .trim();
+
+
+    /* =========================================
+       CHECK PART NUMBER
+       Partial matching
+    ========================================= */
+
+    const partNumber =
+        String(
+            item["Part Number"] || ""
+        ).toLowerCase()
+        .trim();
+
+    if (partNumber.includes(filter)) {
+        return true;
+    }
+
+
+    /* =========================================
+       CHECK SEARCH TAGS
+       Token AND matching
+    ========================================= */
+
+    const searchTags =
+        String(
+            item["SEARCH TAGS"] || ""
+        ).toLowerCase();
+
+    const searchTokens =
+        filter.split(/\s+/);
+
+    return searchTokens.every(token =>
+        searchTags.includes(token)
+    );
+
+}
+
+
+/* =========================================
+   REFRESH ALL CHARTS
+========================================= */
+
+function refreshAllCharts() {
+
+    /* Destroy existing charts */
+
+    if (inventoryHealthChart) {
+
+        inventoryHealthChart.destroy();
+
+    }
+
+
+    if (topCriticalChart) {
+
+        topCriticalChart.destroy();
+
+    }
+
+
+    if (topLowInventoryChart) {
+
+        topLowInventoryChart.destroy();
+
+    }
+
+
+    if (topOverstockChart) {
+
+        topOverstockChart.destroy();
+
+    }
+
+
+    if (laserPartsChart) {
+
+        laserPartsChart.destroy();
+
+    }
+
+
+    /* Rebuild charts */
+
+    createInventoryHealthChart();
+
+    createTopCriticalChart();
+
+    createTopLowInventoryChart();
+
+    createTopOverstockChart();
+
+    createLaserPartsChart();
+
+}
+
+
+/* =========================================
    DETERMINE INVENTORY STATUS
 
    THIS MATCHES THE LOGIC USED
@@ -71,14 +250,18 @@ function getInventoryStatus(item) {
     const onHand =
         Number(item["ON HAND"]) || 0;
 
+
     const laserQueue =
         Number(item["FOR LASER (+)"]) || 0;
+
 
     const qtyShort =
         Number(item["QTY SHORT"]) || 0;
 
+
     const forecast =
         Number(item["FORECAST USAGE"]) || 0;
+
 
     const lowThreshhold = 13;
 
@@ -148,7 +331,7 @@ function getInventoryStatus(item) {
    INVENTORY HEALTH CHART
 ========================================= */
 
-function createInventoryHealthChart(inventoryData) {
+function createInventoryHealthChart() {
 
     let goodCount = 0;
 
@@ -167,6 +350,15 @@ function createInventoryHealthChart(inventoryData) {
             !item["Part Number"] ||
             String(item["Part Number"]).trim() === ""
         ) {
+
+            return;
+
+        }
+
+
+        /* Apply Part Type filter */
+
+        if (!matchesPartType(item)) {
 
             return;
 
@@ -217,123 +409,140 @@ function createInventoryHealthChart(inventoryData) {
     }
 
 
-    new Chart(canvas, {
+    inventoryHealthChart =
+        new Chart(canvas, {
 
-        type: "bar",
+            type: "bar",
 
-        data: {
+            data: {
 
-            labels: [
-                "Good",
-                "Low",
-                "Critical",
-                "TBD"
-            ],
+                labels: [
+                    "Good",
+                    "Low",
+                    "Critical",
+                    "TBD"
+                ],
 
-            datasets: [
+                datasets: [
 
-                {
+                    {
 
-                    label: "Parts",
+                        label: "Parts",
 
-                    data: [
-                        goodCount,
-                        lowCount,
-                        criticalCount,
-                        TBDCount
-                    ],
+                        data: [
+                            goodCount,
+                            lowCount,
+                            criticalCount,
+                            TBDCount
+                        ],
 
-                    backgroundColor: [
-                        "#69ff8c",
-                        "#ffdb65",
-                        "#ff4a4a",
-                        "#00a6f9"
-                    ],
+                        backgroundColor: [
+                            "#69ff8c",
+                            "#ffdb65",
+                            "#ff4a4a",
+                            "#00a6f9"
+                        ],
 
-                    hoverBackgroundColor: [
-                        "#69ff8c",
-                        "#ffdb65",
-                        "#ff4a4a",
-                        "#00a6f9"
-                    ],
+                        hoverBackgroundColor: [
+                            "#69ff8c",
+                            "#ffdb65",
+                            "#ff4a4a",
+                            "#00a6f9"
+                        ],
 
-                    borderColor: [
-                        "#69ff8c",
-                        "#ffdb65",
-                        "#ff4a4a",
-                        "#00a6f9"
-                    ],
+                        borderColor: [
+                            "#69ff8c",
+                            "#ffdb65",
+                            "#ff4a4a",
+                            "#00a6f9"
+                        ],
 
-                    hoverBorderColor: [
-                        "#69ff8c",
-                        "#ffdb65",
-                        "#ff4a4a",
-                        "#00a6f9"
-                    ],
+                        hoverBorderColor: [
+                            "#69ff8c",
+                            "#ffdb65",
+                            "#ff4a4a",
+                            "#00a6f9"
+                        ],
 
-                    borderWidth: 0,
+                        borderWidth: 0,
 
-                    borderRadius: 6
+                        borderRadius: 6
 
-                }
+                    }
 
-            ]
-
-        },
-
-        options: {
-
-            indexAxis: "y",
-
-            responsive: true,
-
-            maintainAspectRatio: false,
-
-            plugins: {
-
-                legend: {
-                    display: false
-                }
+                ]
 
             },
 
-            scales: {
+            options: {
 
-                x: {
+                indexAxis: "y",
 
-                    beginAtZero: true,
+                responsive: true,
 
-                    ticks: {
-                        precision: 0,
-                        color: "#ffffff",
-                        font: {
-                            size: 14
-                        }
+                maintainAspectRatio: false,
+
+                plugins: {
+
+                    legend: {
+
+                        display: false
+
                     }
 
                 },
 
-                y: {
+                scales: {
 
-                    grid: {
-                        display: false
+                    x: {
+
+                        beginAtZero: true,
+
+                        ticks: {
+
+                            precision: 0,
+
+                            color: "#ffffff",
+
+                            font: {
+
+                                size: 14
+
+                            }
+
+                        }
+
                     },
 
-                    ticks: {
-                        color: "#ffffff",
-                        font: {
-                            size: 14,
-                            weight: "500"
+                    y: {
+
+                        grid: {
+
+                            display: false
+
+                        },
+
+                        ticks: {
+
+                            color: "#ffffff",
+
+                            font: {
+
+                                size: 14,
+
+                                weight: "500"
+
+                            }
+
                         }
+
                     }
 
                 }
 
             }
 
-        }
-
-    });
+        });
 
 }
 
@@ -342,19 +551,26 @@ function createInventoryHealthChart(inventoryData) {
    TOP CRITICAL PARTS
 ========================================= */
 
-function createTopCriticalChart(inventoryData) {
+function createTopCriticalChart() {
 
     const criticalParts = [];
 
 
     inventoryData.forEach(item => {
 
-        /* Ignore blank part numbers */
-
         if (
             !item["Part Number"] ||
             String(item["Part Number"]).trim() === ""
         ) {
+
+            return;
+
+        }
+
+
+        /* Apply Part Type filter */
+
+        if (!matchesPartType(item)) {
 
             return;
 
@@ -389,19 +605,11 @@ function createTopCriticalChart(inventoryData) {
     });
 
 
-    /* -------------------------
-       SORT LARGEST SHORTAGE FIRST
-    ------------------------- */
-
     criticalParts.sort(
         (a, b) =>
             b.qtyShort - a.qtyShort
     );
 
-
-    /* -------------------------
-       TOP 10
-    ------------------------- */
 
     const topParts =
         criticalParts.slice(0, 10);
@@ -432,91 +640,94 @@ function createTopCriticalChart(inventoryData) {
     }
 
 
-    new Chart(canvas, {
+    topCriticalChart =
+        new Chart(canvas, {
 
-        type: "bar",
+            type: "bar",
 
-        data: {
+            data: {
 
-            labels: labels,
+                labels: labels,
 
-            datasets: [
+                datasets: [
 
-                {
+                    {
 
-                    label: "Qty Short",
+                        label: "Qty Short",
 
-                    data: values,
+                        data: values,
 
-                    backgroundColor: "#ff4a4a",
+                        backgroundColor: "#ff4a4a",
 
-                    hoverBackgroundColor: "#ff4a4a",
+                        hoverBackgroundColor: "#ff4a4a",
 
-                    borderColor: "#ff4a4a",
+                        borderColor: "#ff4a4a",
 
-                    hoverBorderColor: "#ff4a4a",
+                        hoverBorderColor: "#ff4a4a",
 
-                    borderWidth: 0,
+                        borderWidth: 0,
 
-                    borderRadius: 6
+                        borderRadius: 6
 
-                }
+                    }
 
-            ]
-
-        },
-
-        options: {
-
-            indexAxis: "y",
-
-            responsive: true,
-
-            maintainAspectRatio: false,
-
-            plugins: {
-
-                legend: {
-
-                    display: false
-
-                }
+                ]
 
             },
 
-            scales: {
+            options: {
 
-                x: {
+                indexAxis: "y",
 
-                    beginAtZero: true,
+                responsive: true,
 
-                    ticks: {
+                maintainAspectRatio: false,
 
-                        precision: 0,
+                plugins: {
 
-                        color: "#ffffff",
+                    legend: {
 
-                        font: {
-
-                            size: 14
-
-                        }
+                        display: false
 
                     }
 
                 },
 
-                y: {
+                scales: {
 
-                    ticks: {
+                    x: {
 
-                        color: "#ffffff",
+                        beginAtZero: true,
 
-                        font: {
+                        ticks: {
 
-                            size: 14,
+                            precision: 0,
 
-                            weight: "500"
+                            color: "#ffffff",
+
+                            font: {
+
+                                size: 14
+
+                            }
+
+                        }
+
+                    },
+
+                    y: {
+
+                        ticks: {
+
+                            color: "#ffffff",
+
+                            font: {
+
+                                size: 14,
+
+                                weight: "500"
+
+                            }
 
                         }
 
@@ -526,9 +737,7 @@ function createTopCriticalChart(inventoryData) {
 
             }
 
-        }
-
-    });
+        });
 
 }
 
@@ -537,19 +746,26 @@ function createTopCriticalChart(inventoryData) {
    TOP LOW INVENTORY PARTS
 ========================================= */
 
-function createTopLowInventoryChart(inventoryData) {
+function createTopLowInventoryChart() {
 
     const lowParts = [];
 
 
     inventoryData.forEach(item => {
 
-        /* Ignore blank part numbers */
-
         if (
             !item["Part Number"] ||
             String(item["Part Number"]).trim() === ""
         ) {
+
+            return;
+
+        }
+
+
+        /* Apply Part Type filter */
+
+        if (!matchesPartType(item)) {
 
             return;
 
@@ -584,19 +800,11 @@ function createTopLowInventoryChart(inventoryData) {
     });
 
 
-    /* -------------------------
-       SORT LOWEST INVENTORY FIRST
-    ------------------------- */
-
     lowParts.sort(
         (a, b) =>
             a.onHand - b.onHand
     );
 
-
-    /* -------------------------
-       TOP 10
-    ------------------------- */
 
     const topParts =
         lowParts.slice(0, 10);
@@ -627,91 +835,94 @@ function createTopLowInventoryChart(inventoryData) {
     }
 
 
-    new Chart(canvas, {
+    topLowInventoryChart =
+        new Chart(canvas, {
 
-        type: "bar",
+            type: "bar",
 
-        data: {
+            data: {
 
-            labels: labels,
+                labels: labels,
 
-            datasets: [
+                datasets: [
 
-                {
+                    {
 
-                    label: "On Hand",
+                        label: "On Hand",
 
-                    data: values,
+                        data: values,
 
-                    backgroundColor: "#ffdb65",
+                        backgroundColor: "#ffdb65",
 
-                    hoverBackgroundColor: "#ffdb65",
+                        hoverBackgroundColor: "#ffdb65",
 
-                    borderColor: "#ffdb65",
+                        borderColor: "#ffdb65",
 
-                    hoverBorderColor: "#ffdb65",
+                        hoverBorderColor: "#ffdb65",
 
-                    borderWidth: 0,
+                        borderWidth: 0,
 
-                    borderRadius: 6
+                        borderRadius: 6
 
-                }
+                    }
 
-            ]
-
-        },
-
-        options: {
-
-            indexAxis: "y",
-
-            responsive: true,
-
-            maintainAspectRatio: false,
-
-            plugins: {
-
-                legend: {
-
-                    display: false
-
-                }
+                ]
 
             },
 
-            scales: {
+            options: {
 
-                x: {
+                indexAxis: "y",
 
-                    beginAtZero: true,
+                responsive: true,
 
-                    ticks: {
+                maintainAspectRatio: false,
 
-                        precision: 0,
+                plugins: {
 
-                        color: "#ffffff",
+                    legend: {
 
-                        font: {
-
-                            size: 14
-
-                        }
+                        display: false
 
                     }
 
                 },
 
-                y: {
+                scales: {
 
-                    ticks: {
+                    x: {
 
-                        color: "#ffffff",
+                        beginAtZero: true,
 
-                        font: {
+                        ticks: {
 
-                            size: 14,
+                            precision: 0,
 
-                            weight: "500"
+                            color: "#ffffff",
+
+                            font: {
+
+                                size: 14
+
+                            }
+
+                        }
+
+                    },
+
+                    y: {
+
+                        ticks: {
+
+                            color: "#ffffff",
+
+                            font: {
+
+                                size: 14,
+
+                                weight: "500"
+
+                            }
 
                         }
 
@@ -721,9 +932,7 @@ function createTopLowInventoryChart(inventoryData) {
 
             }
 
-        }
-
-    });
+        });
 
 }
 
@@ -732,24 +941,25 @@ function createTopLowInventoryChart(inventoryData) {
    TOP OVERSTOCKED PARTS
 ========================================= */
 
-function createTopOverstockChart(inventoryData) {
+function createTopOverstockChart() {
 
     const overstockParts = [];
+
 
     /* Parts to exclude from overstock report */
 
     const excludedParts = [
+
         "HECH_24",
         "24_3.5FLCH_LEFT",
         "24_3.5FLCH_RIGHT",
         "MAG_PLATE_DOUBLE_2",
         "MAG_PLATE_SINGLE"
+
     ];
 
 
     inventoryData.forEach(item => {
-
-        /* Ignore blank part numbers */
 
         if (
             !item["Part Number"] ||
@@ -767,7 +977,18 @@ function createTopOverstockChart(inventoryData) {
 
         /* Ignore excluded parts */
 
-        if (excludedParts.includes(partNumber)) {
+        if (
+            excludedParts.includes(partNumber)
+        ) {
+
+            return;
+
+        }
+
+
+        /* Apply Part Type filter */
+
+        if (!matchesPartType(item)) {
 
             return;
 
@@ -804,19 +1025,11 @@ function createTopOverstockChart(inventoryData) {
     });
 
 
-    /* -------------------------
-       SORT LARGEST INVENTORY FIRST
-    ------------------------- */
-
     overstockParts.sort(
         (a, b) =>
             b.onHand - a.onHand
     );
 
-
-    /* -------------------------
-       TOP 10
-    ------------------------- */
 
     const topParts =
         overstockParts.slice(0, 10);
@@ -847,91 +1060,94 @@ function createTopOverstockChart(inventoryData) {
     }
 
 
-    new Chart(canvas, {
+    topOverstockChart =
+        new Chart(canvas, {
 
-        type: "bar",
+            type: "bar",
 
-        data: {
+            data: {
 
-            labels: labels,
+                labels: labels,
 
-            datasets: [
+                datasets: [
 
-                {
+                    {
 
-                    label: "On Hand",
+                        label: "On Hand",
 
-                    data: values,
+                        data: values,
 
-                    backgroundColor: "#69ff8c",
+                        backgroundColor: "#69ff8c",
 
-                    hoverBackgroundColor: "#69ff8c",
+                        hoverBackgroundColor: "#69ff8c",
 
-                    borderColor: "#69ff8c",
+                        borderColor: "#69ff8c",
 
-                    hoverBorderColor: "#69ff8c",
+                        hoverBorderColor: "#69ff8c",
 
-                    borderWidth: 0,
+                        borderWidth: 0,
 
-                    borderRadius: 6
+                        borderRadius: 6
 
-                }
+                    }
 
-            ]
-
-        },
-
-        options: {
-
-            indexAxis: "y",
-
-            responsive: true,
-
-            maintainAspectRatio: false,
-
-            plugins: {
-
-                legend: {
-
-                    display: false
-
-                }
+                ]
 
             },
 
-            scales: {
+            options: {
 
-                x: {
+                indexAxis: "y",
 
-                    beginAtZero: true,
+                responsive: true,
 
-                    ticks: {
+                maintainAspectRatio: false,
 
-                        precision: 0,
+                plugins: {
 
-                        color: "#ffffff",
+                    legend: {
 
-                        font: {
-
-                            size: 14
-
-                        }
+                        display: false
 
                     }
 
                 },
 
-                y: {
+                scales: {
 
-                    ticks: {
+                    x: {
 
-                        color: "#ffffff",
+                        beginAtZero: true,
 
-                        font: {
+                        ticks: {
 
-                            size: 14,
+                            precision: 0,
 
-                            weight: "500"
+                            color: "#ffffff",
+
+                            font: {
+
+                                size: 14
+
+                            }
+
+                        }
+
+                    },
+
+                    y: {
+
+                        ticks: {
+
+                            color: "#ffffff",
+
+                            font: {
+
+                                size: 14,
+
+                                weight: "500"
+
+                            }
 
                         }
 
@@ -941,9 +1157,7 @@ function createTopOverstockChart(inventoryData) {
 
             }
 
-        }
-
-    });
+        });
 
 }
 
@@ -952,19 +1166,26 @@ function createTopOverstockChart(inventoryData) {
    PARTS CURRENTLY ON LASER
 ========================================= */
 
-function createLaserPartsChart(inventoryData) {
+function createLaserPartsChart() {
 
     const laserParts = [];
 
 
     inventoryData.forEach(item => {
 
-        /* Ignore blank part numbers */
-
         if (
             !item["Part Number"] ||
             String(item["Part Number"]).trim() === ""
         ) {
+
+            return;
+
+        }
+
+
+        /* Apply Part Type filter */
+
+        if (!matchesPartType(item)) {
 
             return;
 
@@ -997,19 +1218,11 @@ function createLaserPartsChart(inventoryData) {
     });
 
 
-    /* -------------------------
-       SORT LARGEST LASER QUEUE FIRST
-    ------------------------- */
-
     laserParts.sort(
         (a, b) =>
             b.laserQueue - a.laserQueue
     );
 
-
-    /* -------------------------
-       TOP 10
-    ------------------------- */
 
     const topParts =
         laserParts.slice(0, 10);
@@ -1040,91 +1253,94 @@ function createLaserPartsChart(inventoryData) {
     }
 
 
-    new Chart(canvas, {
+    laserPartsChart =
+        new Chart(canvas, {
 
-        type: "bar",
+            type: "bar",
 
-        data: {
+            data: {
 
-            labels: labels,
+                labels: labels,
 
-            datasets: [
+                datasets: [
 
-                {
+                    {
 
-                    label: "For Laser",
+                        label: "For Laser",
 
-                    data: values,
+                        data: values,
 
-                    backgroundColor: "#00a6f9",
+                        backgroundColor: "#00a6f9",
 
-                    hoverBackgroundColor: "#00a6f9",
+                        hoverBackgroundColor: "#00a6f9",
 
-                    borderColor: "#00a6f9",
+                        borderColor: "#00a6f9",
 
-                    hoverBorderColor: "#00a6f9",
+                        hoverBorderColor: "#00a6f9",
 
-                    borderWidth: 0,
+                        borderWidth: 0,
 
-                    borderRadius: 6
+                        borderRadius: 6
 
-                }
+                    }
 
-            ]
-
-        },
-
-        options: {
-
-            indexAxis: "y",
-
-            responsive: true,
-
-            maintainAspectRatio: false,
-
-            plugins: {
-
-                legend: {
-
-                    display: false
-
-                }
+                ]
 
             },
 
-            scales: {
+            options: {
 
-                x: {
+                indexAxis: "y",
 
-                    beginAtZero: true,
+                responsive: true,
 
-                    ticks: {
+                maintainAspectRatio: false,
 
-                        precision: 0,
+                plugins: {
 
-                        color: "#ffffff",
+                    legend: {
 
-                        font: {
-
-                            size: 14
-
-                        }
+                        display: false
 
                     }
 
                 },
 
-                y: {
+                scales: {
 
-                    ticks: {
+                    x: {
 
-                        color: "#ffffff",
+                        beginAtZero: true,
 
-                        font: {
+                        ticks: {
 
-                            size: 14,
+                            precision: 0,
 
-                            weight: "500"
+                            color: "#ffffff",
+
+                            font: {
+
+                                size: 14
+
+                            }
+
+                        }
+
+                    },
+
+                    y: {
+
+                        ticks: {
+
+                            color: "#ffffff",
+
+                            font: {
+
+                                size: 14,
+
+                                weight: "500"
+
+                            }
 
                         }
 
@@ -1134,8 +1350,6 @@ function createLaserPartsChart(inventoryData) {
 
             }
 
-        }
-
-    });
+        });
 
 }

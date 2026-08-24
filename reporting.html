@@ -56,8 +56,28 @@
     <h1>Inventory Reporting</h1>
 
     <p class="reporting-intro">
-        Current inventory health and parts requiring attention.
-    </p>
+    Current inventory health and parts requiring attention.
+</p>
+
+
+<!-- =========================
+     PART TYPE FILTER
+========================= -->
+
+<div class="reporting-filter-container">
+
+    <label for="partTypeFilter">
+        Part Type
+    </label>
+
+    <input
+        type="text"
+        id="partTypeFilter"
+        class="reporting-filter"
+        placeholder="e.g. header, box, door..."
+    >
+
+</div>
 
 
     <!-- =========================
@@ -69,7 +89,7 @@
         <h2>Inventory Health</h2>
 
         <p>
-            Number of unique parts currently classified as good, low, or critical.
+            Number of parts currently classified as good, low, or critical.
         </p>
 
         <div class="chart-container">
