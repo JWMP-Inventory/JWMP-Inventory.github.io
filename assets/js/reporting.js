@@ -58,6 +58,8 @@ document.addEventListener("DOMContentLoaded", async () => {
 
         /* Create charts */
 
+        updateRBGasketQuantity(inventoryData);
+
         createInventoryHealthChart();
 
         createTopCriticalChart();
@@ -225,6 +227,8 @@ function refreshAllCharts() {
 
     /* Rebuild charts */
 
+    updateRBGasketQuantity(inventoryData);
+
     createInventoryHealthChart();
 
     createTopCriticalChart();
@@ -325,6 +329,60 @@ function getInventoryStatus(item) {
     return "none";
 
 }
+
+
+/* =========================================
+   RB GASKET MATERIAL
+========================================= */
+
+function updateRBGasketQuantity(inventoryData) {
+
+    const rbGasket = inventoryData.find(item =>
+        String(item["Part Number"]).trim() === "RB_GASKET"
+    );
+
+    const quantityElement =
+        document.getElementById("rbGasketQuantity");
+
+    const progressElement =
+        document.getElementById("rbGasketProgress");
+
+    const percentageElement =
+        document.getElementById("rbGasketPercentage");
+
+    if (!quantityElement || !progressElement || !percentageElement) {
+        return;
+    }
+
+    if (!rbGasket) {
+        quantityElement.textContent = "0";
+        progressElement.style.width = "0%";
+        percentageElement.textContent = "0%";
+        return;
+    }
+
+    const quantity =
+        Number(rbGasket["ON HAND"]) || 0;
+
+    const baseline = 10000;
+
+    const percentage =
+        Math.min((quantity / baseline) * 100, 100);
+
+    quantityElement.textContent =
+        quantity.toLocaleString();
+
+    progressElement.style.width =
+        percentage + "%";
+
+    percentageElement.textContent =
+        Math.round(percentage) + "%";
+}
+
+
+
+
+
 
 
 /* =========================================
@@ -954,7 +1012,8 @@ function createTopOverstockChart() {
         "24_3.5FLCH_LEFT",
         "24_3.5FLCH_RIGHT",
         "MAG_PLATE_DOUBLE_2",
-        "MAG_PLATE_SINGLE"
+        "MAG_PLATE_SINGLE",
+        "RB_GASKET"
 
     ];
 

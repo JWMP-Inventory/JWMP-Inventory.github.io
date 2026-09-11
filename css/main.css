@@ -647,3 +647,118 @@ tr.bay-separator td {
 
     border-color: #5f0048;
 }
+
+/* =========================================
+   ACCESSORIES / CONSUMABLE CARDS
+========================================= */
+
+.consumable-card-row {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 20px;
+    margin-bottom: 20px;
+}
+
+
+/* =========================================
+   MATERIAL QUANTITY
+========================================= */
+
+.material-quantity {
+    display: flex;
+    align-items: baseline;
+    gap: 10px;
+    margin-top: 20px;
+}
+
+
+.consumable-quantity {
+    font-size: 3rem;
+    font-weight: 700;
+    color: white;
+}
+
+
+.material-unit {
+    color: #cfcfcf;
+}
+
+
+/* =========================================
+   MATERIAL PROGRESS BAR
+========================================= */
+
+.material-progress {
+    width: 100%;
+    height: 18px;
+    background-color: #414042;
+    border: 1px solid #555;
+    border-radius: 10px;
+    overflow: hidden;
+    margin-top: 20px;
+}
+
+
+.material-progress-bar {
+    height: 100%;
+    width: 0%;
+    border-radius: 10px;
+
+    transition:
+        width 0.5s ease,
+        background-color 0.3s ease;
+}
+
+
+/* =========================================
+   MATERIAL STATUS COLORS
+========================================= */
+
+.material-progress-bar.material-good {
+    background-color: #6dffac;
+}
+
+
+.material-progress-bar.material-warning {
+    background-color: #faf069;
+}
+
+
+.material-progress-bar.material-critical {
+    background-color: #ff4b4b;
+}
+
+
+/* =========================================
+   MATERIAL STATUS TEXT
+========================================= */
+
+.material-status {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+
+    margin-top: 8px;
+
+    color: #cfcfcf;
+    font-size: 0.9rem;
+}
+
+
+.consumable-percentage {
+    font-weight: 700;
+    color: white;
+}
+
+
+/* =========================================
+   MOBILE ACCESSORIES
+========================================= */
+
+@media (max-width: 768px) {
+
+    .consumable-card-row {
+        grid-template-columns: 1fr;
+    }
+
+}
