@@ -648,6 +648,11 @@ tr.bay-separator td {
     border-color: #5f0048;
 }
 
+
+
+
+
+
 /* =========================================
    ACCESSORIES / CONSUMABLE CARDS
 ========================================= */
@@ -659,6 +664,26 @@ tr.bay-separator td {
     margin-bottom: 20px;
 }
 
+
+/* 3 CARDS IN THIS ROW */
+
+.consumable-card-row.three-column-row {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+}
+
+
+/* =========================================
+   MOBILE
+========================================= */
+
+@media (max-width: 768px) {
+
+    .consumable-card-row,
+    .consumable-card-row.three-column-row {
+        grid-template-columns: 1fr;
+    }
+
+}
 
 /* =========================================
    MATERIAL QUANTITY
@@ -750,15 +775,80 @@ tr.bay-separator td {
     color: white;
 }
 
+.consumable-card {
+    background-color: var(--card-color, #2f3032);
+   /* border-top: 4px solid var(--group-color, #555);*/
+}
+
+
 
 /* =========================================
-   MOBILE ACCESSORIES
+   CONSUMABLE GROUP COLOR WEDGE
 ========================================= */
 
-@media (max-width: 768px) {
-
-    .consumable-card-row {
-        grid-template-columns: 1fr;
-    }
-
+.consumable-card {
+    position: relative;
+    overflow: hidden;
 }
+
+/* =========================================
+   GROUP HEADER
+========================================= */
+
+.consumable-group-header {
+    display: flex;
+    align-items: center;
+
+    margin-bottom: 14px;
+
+    color: #c5c5c5;
+
+    font-size: 0.85rem;
+    font-weight: 700;
+
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+}
+
+
+/* LINE AFTER GROUP NAME */
+
+.consumable-group-header::after {
+    content: "";
+
+    flex: 1;
+
+    height: 1px;
+
+    margin-left: 14px;
+
+    background-color: #555;
+}
+
+
+
+
+
+/* COLOR WEDGE */
+/*
+.consumable-card::after {
+    content: "";
+    position: absolute;
+
+    top: 0;
+    right: 0;
+
+    width: 45px;
+    height: 45px;
+
+    background-color: var(--group-color, #555);
+
+    clip-path: polygon(
+        100% 0,
+        100% 100%,
+        0 0
+    );
+
+    pointer-events: none;
+}
+    */
