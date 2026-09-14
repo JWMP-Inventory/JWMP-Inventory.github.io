@@ -1013,7 +1013,16 @@ function createTopOverstockChart() {
         "24_3.5FLCH_RIGHT",
         "MAG_PLATE_DOUBLE_2",
         "MAG_PLATE_SINGLE",
-        "RB_GASKET"
+        "RB_GASKET",
+        "HD_RIVNUT",
+        "HD_WASHER",
+        "HD_HINGE",
+        "RB_BUMP",
+        "CAP_STEM",
+        "CAP_6IN_HANDLE",
+        "21DWSL",
+        "24DWSL",
+        "27DWSL"
 
     ];
 
