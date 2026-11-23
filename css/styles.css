@@ -1,0 +1,153 @@
+:root{
+  --bg:#f4f2f5;--panel:#fff;--panel2:#faf8fb;--line:#d9d3de;--text:#1d1a20;--muted:#6b6472;
+  --accent:#7a0f55;--ok:#16794a;--err:#b3261e;--warn-bg:#fbf3d6;--warn:#7a5b00;--nav:#2b282d;
+  color-scheme:light;box-sizing:border-box;
+}
+@media (prefers-color-scheme:dark){:root{
+  --bg:#434245;--panel:#313033;--panel2:#272629;--line:#58555b;--text:#f3eff5;--muted:#b3adb8;
+  --accent:#6a0d4b;--ok:#6fdca0;--err:#ff8a80;--warn-bg:#3b3a2e;--warn:#f1e26b;--nav:#323133;color-scheme:dark;}}
+*,*::before,*::after{box-sizing:inherit}
+body{margin:0;background:var(--bg);color:var(--text);font:15px/1.5 "Segoe UI",system-ui,-apple-system,Roboto,sans-serif}
+button,input,select,textarea{font:inherit;color:inherit}
+header{background:var(--nav);color:#f3eff5;position:sticky;top:0;z-index:5}
+.bar{max-width:1600px;margin:0 auto;padding:12px 20px;display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap}
+.brand{display:flex;align-items:center;gap:12px;font-weight:700;font-size:17px}
+.logo{background:var(--accent);color:#fff;width:38px;height:38px;border-radius:10px;display:grid;place-items:center;font-weight:800}
+nav{display:flex;gap:4px}
+nav a{color:#f3eff5;text-decoration:none;padding:8px 14px;border-radius:8px;opacity:.8}
+nav a[aria-current=page]{background:#6a0d4b;opacity:1}
+nav a:hover{opacity:1}
+main{max-width:1600px;margin:0 auto;padding:28px 20px 12px}
+.head{display:flex;justify-content:space-between;align-items:flex-end;gap:16px;flex-wrap:wrap;margin-bottom:22px}
+h1{font-size:36px;line-height:1.1;margin:0 0 6px;letter-spacing:-.02em}
+h2{margin:0 0 4px;font-size:21px}
+h2.gap{margin-top:26px}
+.sub{color:var(--muted);margin:0}
+.actions{display:flex;gap:10px}
+.btn{border:1px solid var(--line);background:var(--panel);padding:10px 18px;border-radius:9px;font-weight:600;cursor:pointer}
+.btn:hover{border-color:var(--muted)}
+.btn.primary{background:var(--accent);border-color:var(--accent);color:#fff}
+.btn.primary:hover{filter:brightness(1.15)}
+:focus-visible{outline:2px solid #c46aa4;outline-offset:2px}
+.card{background:var(--panel);border:1px solid var(--line);border-radius:16px;padding:24px;margin-bottom:20px}
+.card-head{display:flex;justify-content:space-between;align-items:flex-start;gap:16px;flex-wrap:wrap;margin-bottom:18px}
+.pill{border:1px solid var(--line);border-radius:999px;padding:3px 13px;font-size:13px;color:var(--muted)}
+.pill.ready{color:var(--ok);border-color:var(--ok)}
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:18px}
+.grid3{display:grid;grid-template-columns:1fr 2fr 1fr;gap:18px}
+label{display:block;font-size:14px;margin-bottom:6px}
+label small{color:var(--muted)}
+textarea{resize:vertical;font-family:Consolas,ui-monospace,monospace}
+.setall{display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin-bottom:14px;color:var(--muted);font-size:14px}
+.setall select{width:auto}
+input,select,textarea{width:100%;background:var(--panel2);border:1px solid var(--line);border-radius:9px;padding:9px 10px;min-width:0}
+input::placeholder{color:var(--muted)}
+/* Own chevron instead of the native arrow, so the text gets the full width. */
+select{appearance:none;-webkit-appearance:none;padding-right:28px;cursor:pointer;
+  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1.5l5 5 5-5' fill='none' stroke='%23999' stroke-width='1.8' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
+  background-repeat:no-repeat;background-position:right 10px center}
+select option{background:var(--panel);color:var(--text)}
+#rows select,#rows input{font-size:14px;padding-top:7px;padding-bottom:7px}
+#rows td{padding:6px 3px}
+#rows td.notes{min-width:220px}
+#rows td.notes textarea{font:inherit;font-size:14px;padding-top:7px;padding-bottom:7px;min-height:37px}
+#rows td.q{min-width:72px}
+#rows td.ln{min-width:72px}
+#rows td.na,#rows td.tog{padding-top:13px}
+.invalid{border-color:var(--err)}
+.err{color:var(--err);font-size:13px;margin-top:4px}
+.tablewrap{overflow-x:auto;border-radius:10px}
+table{width:100%;border-collapse:collapse}
+table.plain{min-width:0}
+thead th{background:var(--accent);color:#fff;text-align:left;font-size:13px;padding:12px 8px;white-space:nowrap}
+thead th:first-child{border-radius:10px 0 0 10px;padding-left:14px}
+thead th:last-child{border-radius:0 10px 10px 0}
+tbody td{padding:6px 4px;border-bottom:1px solid var(--line);vertical-align:top}
+td.ln{width:76px}
+td.q{width:76px}
+td.tog{text-align:center;padding-top:14px}
+td.tog input{width:18px;height:18px;margin:0;accent-color:var(--accent);cursor:pointer}
+td.na{color:var(--muted);text-align:center;opacity:.5;padding-top:14px}
+.icon{background:none;border:0;color:var(--muted);cursor:pointer;font-size:18px;padding:6px 10px;border-radius:8px}
+.icon:hover{color:var(--err);background:var(--panel2)}
+.empty{text-align:center;color:var(--muted);padding:26px 0}
+.foot{display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap;color:var(--muted);font-size:13px;margin-top:14px}
+.note{background:var(--warn-bg);border-left:3px solid var(--warn);border-radius:8px;padding:14px 18px;color:var(--muted);margin-bottom:16px}
+.note b{color:var(--warn);margin-right:10px}
+.bom{border:1px solid var(--line);border-radius:12px;padding:14px 16px;margin-top:12px}
+.bom-head{display:flex;gap:14px;flex-wrap:wrap;margin-bottom:8px}
+.bom-head span{color:var(--muted)}
+tr.asm td{font-weight:600;background:var(--panel2)}
+tr.sub td:first-child{padding-left:22px}
+table.plain th{background:var(--panel2);color:var(--muted);border-radius:0!important}
+/* Inventory spreadsheet: scrolls inside the card with a sticky header row, gridlines, striping */
+.tablewrap.inv{max-height:70vh;overflow:auto;border:1px solid var(--line);border-radius:6px}
+#invTable{border-collapse:collapse;font-size:13px}
+#invTable th{position:sticky;top:0;z-index:1;cursor:pointer;user-select:none;border:1px solid var(--line);padding:8px}
+#invTable td{border:1px solid var(--line);padding:4px 8px;white-space:nowrap}
+#invTable tbody tr:nth-child(even) td{background:var(--panel2)}
+#invSearch{max-width:320px}
+#invPick[hidden],#invMsg[hidden],#invTools[hidden],#invReset[hidden]{display:none}
+#invTools{margin-left:auto;display:flex;align-items:center;gap:8px}
+#invEdits{color:var(--muted);font-size:13px}
+#invTable td[contenteditable]{cursor:text}
+#invTable td[contenteditable]:focus{outline:2px solid var(--accent);outline-offset:-2px;background:var(--panel)}
+#invTable tbody tr td.edited{background:#fff3c4;color:#000}
+.page-foot{display:flex;justify-content:space-between;color:var(--muted);font-size:12px;padding:6px 0 24px;gap:10px;flex-wrap:wrap}
+.view{display:none}.view.on{display:block}
+.toast{position:fixed;left:50%;bottom:20px;transform:translateX(-50%);background:var(--text);color:var(--bg);padding:10px 18px;border-radius:10px;font-size:14px;opacity:0;pointer-events:none;transition:opacity .2s}
+.toast.show{opacity:1}
+/* ---------- printable BOM sheets (always black on white) ---------- */
+#sheets:not(.empty){display:flex;flex-direction:column;gap:20px;overflow-x:auto}
+.sheet{flex:none;margin:0 auto;width:11in;height:8.5in;padding:.4in;background:#fff;color:#000;border:1px solid var(--line);display:grid;grid-template-columns:minmax(0,1.65fr) minmax(0,1fr);grid-template-rows:minmax(0,1fr);gap:.35in;overflow:hidden;
+  font:11px/1.3 "Segoe UI",Arial,sans-serif;-webkit-print-color-adjust:exact;print-color-adjust:exact}
+.sheet h2{font-size:17px;text-align:center;margin:0 0 4px}
+.sheet table{min-width:0;width:100%;border-collapse:collapse;line-height:1.2}
+.sheet thead th{background:#fff;color:#000;border-top:2px solid #000;border-bottom:2px solid #000;border-radius:0;padding:2px 6px;font-size:10px;text-align:center}
+.sheet tbody td{padding:1px 6px;border:0;white-space:nowrap;text-align:center;vertical-align:middle}
+.sheet tbody tr:nth-child(even) td{background:#e4e4e4}
+.sheet tr.asm td{font-weight:700;border-top:1.5px solid #000;background:transparent}
+.sheet tbody tr:nth-child(even).asm td{background:#e4e4e4}
+.sheet tbody tr.asm.asm-box td{background:#dbe7f6}
+.sheet tbody tr.asm.asm-hw td{background:#fbe2d5}
+.sheet-side{text-align:center;display:flex;flex-direction:column;gap:10px}
+.sheet-side p{margin:0;font-size:14px}
+.sheet-tag{font-family:"Aptos Narrow","Aptos Narrow Bold",Aptos,"Arial Narrow",sans-serif;color:#ff0000;font-size:56px;font-weight:700;line-height:1;transform:scaleX(1.15)} /* Aptos Narrow is tall and thin; widen it a little */
+.sheet-img{flex:0 1 2.3in;min-height:0} /* reserved even when there's no image; shrinks so the logo stays on the page */
+.sheet-img img{width:100%;height:100%;object-fit:contain}
+.sheet-logo{margin:auto -.03in -.25in 0;align-self:flex-end;max-height:.45in;max-width:100%;object-fit:contain;
+  filter:drop-shadow(0 0 .7px rgba(0,0,0,.75)) drop-shadow(0 0 .7px rgba(0,0,0,.75))} /* soft outline around the letters (needs a transparent PNG) */
+.sheet-side h3{font-size:18px;margin:4px 0 0}
+.dims,.chips{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
+.dims div,.sbox,.chips span,.skubox{border:1px solid #888;box-shadow:1px 1px 3px #bbb}
+.dims span{display:block;border-bottom:1px solid #888;font-weight:700;font-size:13px}
+.dims b{display:block;font-size:18px}
+.sbox{font-weight:700;font-size:14px;padding:4px}
+.chips span{background:#d0d0d0;font-weight:700;font-size:10px;padding:4px 2px;text-transform:uppercase;display:flex;align-items:center;justify-content:center;text-align:center}
+.skubox span{display:block;border-bottom:1px solid #888;font-size:14px;padding:3px}
+.skubox b{display:block;font-weight:400;font-size:14px;padding:12px 4px}
+.notesbox{margin-top:12px;text-align:center}
+.notesbox span{font-weight:700}
+.notesbox b{min-height:calc(3 * 1.3em + 12px);padding:6px 8px;text-align:left;white-space:pre-wrap;overflow-wrap:anywhere}
+@page{size:letter landscape;margin:0}
+.print-only{display:none}
+@page tally{size:letter portrait;margin:.5in}
+@media print{
+  html:root{--bg:#fff;--panel:#fff;--panel2:#e8e8e8;--line:#bbb;--text:#000;--muted:#333;color-scheme:light}
+  body{background:#fff}
+  header,.page-foot,.toast{display:none!important}
+  main{padding:0;max-width:none}
+  /* BOM sheets (Print BOMs page) */
+  body:not(.print-tally) .view:not(#v-print),#v-print .head{display:none!important}
+  #sheets:not(.empty){display:block;overflow:visible}
+  .sheet{border:0;break-after:page}
+  .sheet:last-child{break-after:auto}
+  /* Consolidated parts list only (Print parts list button) */
+  body.print-tally .view:not(#v-bom-results),body.print-tally #v-bom-results>.head,body.print-tally #resBody>:not(#tally){display:none!important}
+  body.print-tally #v-bom-results .card{border:0;padding:0}
+  body.print-tally #tally{page:tally;font-size:12px}
+  body.print-tally .print-only{display:block;margin:0 0 6px}
+  body.print-tally #tally th{-webkit-print-color-adjust:exact;print-color-adjust:exact}
+}
+@media(max-width:700px){.grid2,.grid3{grid-template-columns:1fr}h1{font-size:28px}.card{padding:18px}}
+@media(prefers-reduced-motion:reduce){.toast{transition:none}}

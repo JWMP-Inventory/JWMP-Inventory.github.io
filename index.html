@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>BOM Generator</title>
+<link rel="stylesheet" href="css/styles.css">
+</head>
+<body>
+<header><div class="bar">
+  <div class="brand"><div class="logo">JW</div>BOM Generator</div>
+  <nav>
+    <a href="#job-builder" data-view="job-builder">Job Builder</a>
+    <a href="#bom-results" data-view="bom-results">BOM Results</a>
+    <a href="#product-data" data-view="product-data">Product Data</a>
+  </nav>
+</div></header>
+
+<main>
+<section class="view" id="v-job-builder">
+  <div class="head">
+    <div><h1>Bill of Materials</h1><p class="sub">Build item BOMs and a consolidated parts tally for a job.</p></div>
+    <div class="actions">
+      <button class="btn" id="clear">Clear job</button>
+      <button class="btn primary" id="generate">Generate BOMs</button>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-head">
+      <div><h2>Job information</h2><p class="sub">Enter the job details, then add the items to process.</p></div>
+      <span class="pill" id="status">Not generated</span>
+    </div>
+    <div class="grid3">
+      <div><label for="jobNo">Job number</label><input id="jobNo" placeholder="e.g. 12345" autocomplete="off"><div class="err" id="jobErr"></div></div>
+      <div><label for="jobDesc">Job description <small>(optional)</small></label><input id="jobDesc" placeholder="Project or customer reference" autocomplete="off"></div>
+      <div><label for="totalLines">Total line items <small>(including non-cabinet lines)</small></label><input id="totalLines" type="number" min="1" step="1" placeholder="Highest line number" autocomplete="off"><div class="err" id="totalErr"></div></div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-head">
+      <div><h2>Add from SKUs</h2><p class="sub">Paste one SKU per line. Options a SKU doesn't include are highlighted in the items table for you to fill in.</p></div>
+      <button class="btn" id="addSkus">Add SKUs</button>
+    </div>
+    <label for="skus">SKUs</label>
+    <textarea id="skus" rows="4" spellcheck="false" placeholder="1100-304SS-FHB24-1D-1QDR-24-R"></textarea>
+    <div class="err" id="skuErr"></div>
+  </div>
+
+  <div class="card">
+    <div class="card-head">
+      <div><h2>Items</h2><p class="sub">One row per item/line. Options change with the item type.</p></div>
+      <button class="btn" id="add">+ Add item</button>
+    </div>
+    <div class="setall">
+      <span>Set all lines:</span>
+      <select id="allDoor" aria-label="Door style for all lines"><option value="">Door style</option></select>
+      <select id="allShelves" aria-label="Shelves for all lines"><option value="">Shelves</option></select>
+      <select id="allFinish" aria-label="Finish for all lines"><option value="">Finish</option></select>
+      <button class="btn" id="applyAll">Apply</button>
+    </div>
+    <div class="tablewrap"><table>
+      <thead><tr><th>Line</th><th>Item type</th><th>Qty</th><th>In/Out</th><th>Subtype</th><th>Swing</th><th>Drawer</th><th>Shelves</th><th>Floor bracket</th><th>Width</th><th>Depth</th><th>Height</th><th>Trim W</th><th>Trim D</th><th>Trim H</th><th>GF4 H</th><th>GF5 W</th><th>Door style</th><th>Finish</th><th>Special instructions</th><th></th></tr></thead>
+      <tbody id="rows"></tbody>
+    </table></div>
+    <div class="foot"><span id="count">0 items</span><span>Unavailable options are greyed out for the selected item type.</span></div>
+  </div>
+</section>
+
+<section class="view" id="v-bom-results">
+  <div class="head"><div><h1>BOM Results</h1><p class="sub" id="resSub">No BOMs generated yet.</p></div>
+    <div class="actions"><button class="btn" data-go="job-builder">Back to job</button><button class="btn" id="printTally">Print parts list</button><button class="btn primary" data-go="print">Print BOMs</button></div></div>
+  <div class="card"><div id="resBody" class="empty">Generate BOMs from the Job Builder to see results here.</div></div>
+</section>
+
+<section class="view" id="v-print">
+  <div class="head"><div><h1>Print BOMs</h1><p class="sub">One landscape page per unit. Choose Print, then "Save as PDF" as the printer to make a PDF.</p></div>
+    <div class="actions"><button class="btn" data-go="bom-results">Back to results</button><button class="btn primary" id="printBtn">Print / Save PDF</button></div></div>
+  <div id="sheets" class="card empty">Generate BOMs from the Job Builder first.</div>
+</section>
+
+<section class="view" id="v-product-data">
+  <div class="head"><div><h1>Product Data</h1><p class="sub" id="invSub">Inventory from assets/inventory.json.</p></div></div>
+  <div class="card">
+    <div class="setall">
+      <input id="invSearch" type="search" placeholder="Search all columns" aria-label="Search inventory" autocomplete="off">
+      <span id="invCount"></span>
+      <label class="btn" id="invPick" hidden>Open inventory.json<input type="file" id="invFile" accept=".json,application/json" hidden></label>
+      <span id="invTools" hidden><span id="invEdits"></span> <button class="btn" id="invReset" hidden>Undo all edits</button> <button class="btn" id="invDownload">Download inventory.json</button></span>
+    </div>
+    <div class="tablewrap inv"><table class="plain" id="invTable"></table></div>
+    <div class="empty" id="invMsg">Loading inventory...</div>
+  </div>
+</section>
+
+<div class="page-foot"><span>JW BOM Generator</span><span>Prototype</span></div>
+</main>
+<div class="toast" id="toast" role="status"></div>
+
+<!-- Load order matters: config -> Item base class -> item types -> registry -> generator -> UI -->
+<script src="js/config.js"></script>
+<script src="js/items/Item.js"></script>
+<script src="js/items/Base.js"></script>
+<script src="js/items/SinkBase.js"></script>
+<script src="js/items/DrawerBank.js"></script>
+<script src="js/items/BasePullout.js"></script>
+<script src="js/items/GrillCabinet.js"></script>
+<script src="js/items/WallCabinet.js"></script>
+<script src="js/items/registry.js"></script>
+<script src="js/bom.js"></script>
+<script src="js/app.js"></script>
+<script src="js/inventory.js"></script>
+</body>
+</html>
