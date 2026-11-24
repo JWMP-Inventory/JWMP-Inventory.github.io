@@ -65,7 +65,8 @@ class Base extends Item {
   parts() {
     const { width: w, depth: d } = this;
     const parts = [
-      ...this.boxParts(),
+      // No header channel under 24" wide.
+      ...this.boxParts().filter(p => this.width >= 24 || !p.partNo.startsWith("HECH_")),
       ...inAssembly(HARDWARE_ASSEMBLY, [
         ...this.pilasterParts(),
         ...(this.shelves > 0 ? [
@@ -74,8 +75,8 @@ class Base extends Item {
           part("RPPSH_BRKT_R", "Right Shelf Bracket", this.shelves * 2),
         ] : []),
         ...(this.floorBracket ? [part(`FLBRKT_${d}`, "Floor Bracket")] : []),
-        // Outdoor: a divide under each real drawer, the drawer's width (side-by-side drawers get half width).
-        ...(this.location === "Outdoor" && this.drawers().length ? [part(`DIV_${pad2(this.drawerWidth())}_UNIVERSAL`, "Drawer Divide", this.drawers().length)] : []),
+        // One full-width divide under the drawer(s): QDR, TDR, 2QDR or 2TDR, indoor and outdoor. None for false drawers.
+        ...(this.drawers().length ? [part(`DIV_${pad2(w)}_UNIVERSAL`, "Drawer Divide")] : []),
       ]),
     ];
     parts.push(...this.drawerParts(), ...this.falseDrawerParts());

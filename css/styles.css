@@ -82,9 +82,11 @@ tr.sub td:first-child{padding-left:22px}
 table.plain th{background:var(--panel2);color:var(--muted);border-radius:0!important}
 /* Inventory spreadsheet: scrolls inside the card with a sticky header row, gridlines, striping */
 .tablewrap.inv{max-height:70vh;overflow:auto;border:1px solid var(--line);border-radius:6px}
-#invTable{border-collapse:collapse;font-size:13px}
-#invTable th{position:sticky;top:0;z-index:1;cursor:pointer;user-select:none;border:1px solid var(--line);padding:8px}
-#invTable td{border:1px solid var(--line);padding:4px 8px;white-space:nowrap}
+/* separate borders so the sticky header keeps its borders (collapsed ones scroll away and leave a gap) */
+#invTable{border-collapse:separate;border-spacing:0;font-size:13px}
+#invTable th{position:sticky;top:0;z-index:1;cursor:pointer;user-select:none;border:solid var(--line);border-width:0 1px 1px 0;padding:8px}
+#invTable td{border:solid var(--line);border-width:0 1px 1px 0;padding:4px 8px;white-space:nowrap}
+#invTable tr>:first-child{border-left-width:1px}
 #invTable tbody tr:nth-child(even) td{background:var(--panel2)}
 #invSearch{max-width:320px}
 #invPick[hidden],#invMsg[hidden],#invTools[hidden],#invReset[hidden]{display:none}
