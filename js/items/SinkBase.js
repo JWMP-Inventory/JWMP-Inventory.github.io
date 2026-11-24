@@ -14,8 +14,10 @@ class SinkBase extends Base {
   static skuKind = "SB"; // FHSB / AHSB; otherwise the same SKU format as Base
 
   defaultImage() {
-    // Only the 2 door false drawer image applies to sink bases; otherwise no image yet.
-    return this.subtype === "Double Door" && this.falseDrawers().length ? "DEFAULT-BASE-2D-1FQDR" : "";
+    // Only 2 door images so far: with a false drawer, or full height with no drawer.
+    if (this.subtype !== "Double Door") return "";
+    if (this.falseDrawers().length) return "DEFAULT-BASE-2D-1FQDR";
+    return this.drawer === "None" && this.height === 34.5 ? "2D-FHSB" : "";
   }
 
   // Same parts as Base, minus the pilasters and header channel.
