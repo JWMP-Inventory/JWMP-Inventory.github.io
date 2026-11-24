@@ -204,7 +204,7 @@ function renderResults(job, boms, tally) {
        ${tally.length ? partsTable(tallyRows(tally)) : '<p class="sub">No parts yet. Add calculations to each item class\'s parts() method.</p>'}
      </div>
      <h2 class="gap">Item BOMs</h2>` +
-    boms.map(b => `<div class="bom"><div class="bom-head"><strong>Line ${b.line} × ${b.item.qty}</strong>${b.item.sku() ? `<strong>${esc(b.item.sku())}</strong>` : ""}<span>${esc(b.item.describe())}</span><span>Weight per unit: ${esc(weightText(b.parts))}</span></div>
+    boms.map(b => `<div class="bom"><div class="bom-head"><strong>Line ${b.line} × ${b.item.qty}</strong>${b.item.sku() ? `<strong>${esc(b.item.sku())}</strong>` : ""}<span>${esc(b.item.describe())}</span><span>Weight per unit: ${esc(weightText(b.parts, b.item))}</span></div>
       ${b.parts.length ? partsTable(bomRows(b.parts)) : `<p class="sub">No parts defined yet for ${esc(b.item.constructor.label)}.</p>`}</div>`).join("");
 }
 
@@ -226,11 +226,26 @@ function asmClass(name) {
 /**
  * Total weight of one unit from the inventory's Part Weight (lbs) column, e.g. "152.3 lbs".
  * Hardware counts as weightless, except cabinet legs at 1 lb each.
+ * If any finished front has no weight (only Slab ones do for now), the cabinet is weighed as if it had Slab fronts.
+ * Drawer boxes use drawerWeight() instead of their parts' weights; finished drawer fronts and rears are added on top.
  */
-function weightText(parts) {
+function weightText(parts, item) {
   if (!Inventory.rows.length) return "-";
+  const isFront = p => /^(ULB[LR]D|ULBDRW|ILBPO(?!BOX))/.test(p.partNo);
+  if (item.door !== "Slab" && parts.some(p => isFront(p) && Inventory.weightOf(p.partNo) === null)) {
+    parts = ItemRegistry.create({ ...item, door: "Slab" }).bomParts();
+  }
   let lbs = 0;
+  for (const size of item.drawers()) {
+    lbs += drawerWeight(item.drawerWidth(), DRAWER_HEIGHTS[size], DRAWER_DEPTHS[item.depth]);
+  }
   for (const p of parts) {
+    if (p.partNo.startsWith("ULDRW")) continue; // drawer box parts, weighed as a whole above
+    const front = p.partNo.match(/^ULBDRW_SLAB_([\d.]+)_([\d.]+)_D[FB]/);
+    if (front && Inventory.weightOf(p.partNo) === null) {
+      lbs += drawerFrontWeight(+front[1], +front[2]) * p.qty;
+      continue;
+    }
     if (p.assembly?.name === "Hardware") {
       if (p.partNo.startsWith("CAB_LEG_")) lbs += p.qty;
       continue;
@@ -267,7 +282,7 @@ function sheetHTML(b, job, n, total, totalLines, parts, heading) {
       <div class="chips">${chips}</div>
       <div class="sbox">${esc(finishLabel(it.finish) || "-")}${it.finish.startsWith("FN-PC-") ? `<br>${esc(it.finish)}` : ""}</div>
       <div class="skubox"><span>Cabinet SKU</span><b>${esc(it.sku() || "-")}</b></div>
-      <div class="skubox"><span>Cabinet Weight</span><b>${esc(weightText(b.parts))}</b></div>
+      <div class="skubox"><span>Cabinet Weight</span><b>${esc(weightText(b.parts, b.item))}</b></div>
       <img class="sheet-logo" src="images/JW-logo.png" alt="JW Metal Products">
     </div>
   </article>`;

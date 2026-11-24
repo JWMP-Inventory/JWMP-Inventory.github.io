@@ -41,7 +41,12 @@ const LOCATION_CODES = { Indoor: "1100", Outdoor: "1200" }; // SKU prefix
 const DRAWER_HEIGHTS = { "Quarter": 7.5, "Third": 10, "Three Eighths": 11.25, "Half": 15 };
 const DRAWER_CODES = { "Quarter": "QDR", "Third": "TDR", "Three Eighths": "TEDR", "Half": "HDR" }; // SKU abbreviations
 const DRAWER_DEPTHS = { 24: 21, 28: 24, 32: 27 }; // item depth -> drawer part depth
-const SHELF_COUNTS = [0, 1, 2, 3, 4];
+// Estimated weight (lbs) of a drawer box: no finished front/rear, slides or brackets.
+// Fitted to 4 weighed drawers (W x H x D, lbs): 12x11.25x21 18, 24x14x24 34.25, 36x11.25x21 33, 21x7.5x21 17.15 (all within 2%).
+const drawerWeight = (w, h, d) => 0.044 * h * (w + d) + 0.0071 * w * d;
+// Estimated weight of one Slab finished drawer front or rear, for sizes with no inventory weight (fitted to the ones that have one).
+const drawerFrontWeight = (w, h) => 0.016 * w * h;
+const SHELF_COUNTS =[0, 1, 2, 3, 4];
 const STANDARD_DEPTHS = [24, 28, 32];
 const WALL_DEPTHS = [13, 24];
 const STANDARD_HEIGHTS = [{ value: 30, label: "30 (ADA)" }, { value: 34.5, label: "34.5" }];
