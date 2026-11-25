@@ -30,6 +30,11 @@ class BasePullout extends Item {
     };
   }
 
+  /** Only full height single trashcans (FHBPOSTC) have an image so far. */
+  defaultImage() {
+    return this.subtype === "Pull Out Single Trashcan" && this.height === 34.5 ? "POSTC-18-24-SHAKER" : "";
+  }
+
   sku() {
     const code = BasePullout.SKU_CODES[this.subtype];
     if (!code) return "";
